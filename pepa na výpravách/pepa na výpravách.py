@@ -7,7 +7,6 @@ mixer.init()
 mixer.music.load("hudba do pozadí.mp3")
 mixer.music.play(-1)
 # Intro
-'''
 time.sleep(0.8)
 print("KV uvádí...")
 time.sleep(1.2)
@@ -17,7 +16,7 @@ print(f"{Fore.LIGHTBLACK_EX}Speciální poděkování firmě {Fore.RED}Rare{Fore
 time.sleep(1.6)
 print(f"{Fore.LIGHTBLACK_EX}© 2021 - 2022 VŠECHNA PRÁVA VYHRAZENA!{Fore.RESET}")
 time.sleep(4.9)
-'''
+
 # Pepa
 class Pepa():
 	def __init__(self, penize, zivoty, xp):
@@ -27,7 +26,7 @@ class Pepa():
 		self.level = 1
 		self.stats = [20, 50]
 		self.xp_multiplier = 1
-		self.koupeno = [None]
+		self.koupeno = []
 		
 	def __repr__(self):
 		return f"Pepo, máš {Fore.RED}{self.zivoty} životů{Fore.RESET} a {Fore.LIGHTMAGENTA_EX}{self.penize} peněz{Fore.RESET}. Máš {Fore.LIGHTBLUE_EX}level {self.level}{Fore.BLUE} ({self.xp} / {50 * int(self.level)} XP){Fore.RESET}\nChceš se vydat na výpravu? A = Ano, S = Shop: "
@@ -35,7 +34,7 @@ class Pepa():
 	def vyprava(self):
 		self.ztraceno_zivotu = random.randint(self.stats[0], self.stats[1])
 		self.ziskano_penez = random.randint(15, 30)
-		self.ziskano_xp = random.randint(10, 25) * self.xp_multiplier
+		self.ziskano_xp = int(round(random.randint(10, 25) * self.xp_multiplier, 0))
 		
 		self.zivoty -= self.ztraceno_zivotu
 		self.penize += self.ziskano_penez
@@ -55,6 +54,7 @@ class Pepa():
 		self.level += 1
 		print(f"{Fore.LIGHTBLUE_EX}Pepo, dostal jsi nový level! Jsi už na levelu " + str(self.level) + f"!{Fore.RESET}")
 
+# Pro debug dobrý...
 pepa = Pepa(0, 100, 0)
 
 class Item():
@@ -70,11 +70,11 @@ class Item():
 	def __repr__(self):
 		return f"{self.barva}{self.zkratka} = {self.nazev} ({self.cena} peněz, " + (f"{self.pocet_kusu}" if self.pocet_kusu != None else "nekonečno") + " kusů)"
 	
-	def nakup(self, nazev, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
+	def nakup(self, nazev, cena, pocet_kusu, potrebny_level, predchozi_itemy):
 		if pocet_kusu != None and pocet_kusu < 1:
 			return self.neni_na_sklade()
 		if not all(value in pepa.koupeno for value in predchozi_itemy):
-			return self.neni_predchozi_item()
+			return self.neni_predchozi_item(predchozi_itemy)
 		if pepa.level < self.potrebny_level:
 			return self.nedostatecny_level()
 		if pepa.penize < cena:
@@ -90,9 +90,25 @@ class Item():
 	def nedostatecny_level(self):
 		return f"{Fore.RED}Error: Nemáš dostatek levelů, Pepo!{Fore.RESET}"
 	
-	def neni_predchozi_item(self):
-		return f"{Fore.RED}Error: Nekoupil sis předchozí věci, Pepo!{Fore.RESET}"
-	
+	def neni_predchozi_item(self, predchozi_itemy):
+		return_str = ""
+		nekoupene_predchozi_itemy = []
+		
+		for item in predchozi_itemy:
+			if item not in pepa.koupeno:
+				nekoupene_predchozi_itemy.append(item)
+		
+		for item in nekoupene_predchozi_itemy:
+			if item == nekoupene_predchozi_itemy[0] and len(nekoupene_predchozi_itemy) == 1:
+				return_str += f"{Fore.RED}Error: Nekoupil sis ani {item} Pepo!"
+			elif item == nekoupene_predchozi_itemy[0]:
+				return_str += f"{Fore.RED}Error: Nekoupil sis ani {item} ani "
+			elif item != nekoupene_predchozi_itemy[-1]:
+				return_str += f"{item} ani "
+			else:
+				return_str += f"{item} Pepo!{Fore.RESET}"
+		return return_str
+		
 	def neni_na_sklade(self):
 		return f"{Fore.RED}Error: Vyprodáno!{Fore.RESET}"
 		
@@ -101,7 +117,7 @@ class LifePotion(Item):
 		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
 		
 	def koupit(self):
-		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.potrebny_level, self.predchozi_itemy)
 		if "Error" not in self.k:
 			pepa.zivoty = 100
 		
@@ -110,7 +126,7 @@ class DrevenyMec(Item):
 		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
 		
 	def koupit(self):
-		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.potrebny_level, self.predchozi_itemy)
 		if "Error" not in self.k:
 			self.pocet_kusu -= 1
 			pepa.stats[0] = 15
@@ -120,7 +136,7 @@ class DrevenyStit(Item):
 		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
 		
 	def koupit(self):
-		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.potrebny_level, self.predchozi_itemy)
 		if "Error" not in self.k:
 			self.pocet_kusu -= 1
 			pepa.stats[1] = 40
@@ -130,7 +146,7 @@ class BronzovyMec(Item):
 		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
 		
 	def koupit(self):
-		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.potrebny_level, self.predchozi_itemy)
 		if "Error" not in self.k:
 			self.pocet_kusu -= 1
 			pepa.stats[0] = 10
@@ -140,7 +156,7 @@ class BronzovyStit(Item):
 		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
 		
 	def koupit(self):
-		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.potrebny_level, self.predchozi_itemy)
 		if "Error" not in self.k:
 			self.pocet_kusu -= 1
 			pepa.stats[1] = 30
@@ -150,7 +166,7 @@ class XPMultiplier(Item):
 		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
 		
 	def koupit(self):
-		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.potrebny_level, self.predchozi_itemy)
 		if "Error" not in self.k:
 			self.pocet_kusu -= 1
 			pepa.xp_multiplier += 0.2
@@ -159,15 +175,13 @@ class XPMultiplier(Item):
 lifePotion = LifePotion("Life potion", "L", 25, None, Fore.LIGHTRED_EX, 1, [])
 drevenyMec = DrevenyMec("Dřevěný meč", "DM", 150, 1, Fore.LIGHTBLACK_EX, 3, [])
 drevenyStit = DrevenyStit("Dřevěný štít", "DŠ", 200, 1, Fore.LIGHTBLACK_EX, 3, [])
-bronzovyMec = BronzovyMec("Bronzový meč", "BM", 350, 1, Fore.YELLOW, 7, [])
-bronzovyStit = BronzovyStit("Bronzový štít", "BŠ", 400, 1, Fore.YELLOW, 7, [])
-xpMultiplier = XPMultiplier("XP Multiplier", "XP", 500, 5, Fore.BLUE, 8, ["Dřevěný štít", "Dřevěný meč"])
+bronzovyMec = BronzovyMec("Bronzový meč", "BM", 350, 1, Fore.YELLOW, 7, ["Dřevěný meč"])
+bronzovyStit = BronzovyStit("Bronzový štít", "BŠ", 400, 1, Fore.YELLOW, 7, ["Dřevěný štít"])
+xpMultiplier = XPMultiplier("XP Multiplier", "XP", 500, 5, Fore.BLUE, 8, ["Dřevěný meč", "Dřevěný štít"])
 itemy = [lifePotion, drevenyMec, drevenyStit, bronzovyMec, bronzovyStit, xpMultiplier]
 
 # Nepřátelé
 #
-
-#shop = {"L": [f"{Fore.LIGHTRED_EX}L = Life potion (25 peněz, nekonečno kusů){Fore.RESET}", True], "DM": [f"{Fore.LIGHTBLACK_EX}DM = Dřevěný meč (3. level, 150 peněz, 1 kus){Fore.RESET}", True], "DŠ": [f"{Fore.LIGHTBLACK_EX}DŠ = Dřevěný štít (3. level, 200 peněz, 1 kus){Fore.RESET}", True], "BM": [f"{Fore.YELLOW}BM = Bronzový meč (7. level, 350 peněz, 1 kus){Fore.RESET}", True], "BŠ": [f"{Fore.YELLOW}BŠ = Bronzový štít (7. level, 400 peněz, 1 kus){Fore.RESET}", True], "XP": [f"{Fore.BLUE}XP = XP 1.2x multiplier (8. level, 500 peněz, {pepa.xp_multiplier} kusů){Fore.RESET}", False]}
 
 def kupovani(vec):
 	match vec:
@@ -200,7 +214,7 @@ def shop():
 
 # Herní smyčka
 while True:
-	if pepa.xp >= 50 * pepa.level:
+	while pepa.xp >= 50 * pepa.level:
 		pepa.rank_up()
 	print(pepa, end="")
 	rozhodnuti = input().upper()
