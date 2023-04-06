@@ -19,133 +19,206 @@ print(f"{Fore.LIGHTBLACK_EX}© 2021 - 2022 VŠECHNA PRÁVA VYHRAZENA!{Fore.RESET
 time.sleep(4.9)
 '''
 # Pepa
-penize = 0
-zivoty = 100
-xp = 0
-level = 1
-stats = [15, 50]
-xp_multiplier = 1
-xp_multiplier_kusu = 5
-shop = {"L": [f"{Fore.LIGHTRED_EX}L = Life potion (25 peněz, nekonečno kusů){Fore.RESET}", True], "DM": [f"{Fore.LIGHTBLACK_EX}DM = Dřevěný meč (3. level, 150 peněz, 1 kus){Fore.RESET}", True], "DŠ": [f"{Fore.LIGHTBLACK_EX}DŠ = Dřevěný štít (3. level, 200 peněz, 1 kus){Fore.RESET}", True], "BM": [f"{Fore.YELLOW}BM = Bronzový meč (7. level, 350 peněz, 1 kus){Fore.RESET}", True], "BŠ": [f"{Fore.YELLOW}BŠ = Bronzový štít (7. level, 400 peněz, 1 kus){Fore.RESET}", True], "XP": [f"{Fore.BLUE}XP = XP 1.2x multiplier (8. level, 500 peněz, {xp_multiplier_kusu} kusů){Fore.RESET}", False]}
-koupeno = []
+class Pepa():
+	def __init__(self, penize, zivoty, xp):
+		self.penize = penize
+		self.zivoty = zivoty
+		self.xp = xp
+		self.level = 1
+		self.stats = [20, 50]
+		self.xp_multiplier = 1
+		self.koupeno = [None]
+		
+	def __repr__(self):
+		return f"Pepo, máš {Fore.RED}{self.zivoty} životů{Fore.RESET} a {Fore.LIGHTMAGENTA_EX}{self.penize} peněz{Fore.RESET}. Máš {Fore.LIGHTBLUE_EX}level {self.level}{Fore.BLUE} ({self.xp} / {50 * int(self.level)} XP){Fore.RESET}\nChceš se vydat na výpravu? A = Ano, S = Shop: "
+	
+	def vyprava(self):
+		self.ztraceno_zivotu = random.randint(self.stats[0], self.stats[1])
+		self.ziskano_penez = random.randint(15, 30)
+		self.ziskano_xp = random.randint(10, 25) * self.xp_multiplier
+		
+		self.zivoty -= self.ztraceno_zivotu
+		self.penize += self.ziskano_penez
+		self.xp += self.ziskano_xp
+		
+	def zivotu_ztraceno(self):
+		return self.ztraceno_zivotu
+		
+	def penez_ziskano(self):
+		return self.ziskano_penez
+		
+	def xp_ziskano(self):
+		return self.ziskano_xp
+	
+	def rank_up(self):
+		self.xp -= 50 * self.level
+		self.level += 1
+		print(f"{Fore.LIGHTBLUE_EX}Pepo, dostal jsi nový level! Jsi už na levelu " + str(self.level) + f"!{Fore.RESET}")
 
-def vyprava():
-	global zivoty
-	global penize
-	global xp
-	ztraceno_zivotu = random.randint(stats[0], stats[1])
-	ziskano_penez = random.randint(15, 30)
-	ziskano_xp = random.randint(10, 25) * xp_multiplier
-	zivoty -= ztraceno_zivotu
-	penize += ziskano_penez
-	xp += ziskano_xp
-	return {"ztraceno_zivotu": ztraceno_zivotu, "ziskano_penez": ziskano_penez, "ziskano_xp": ziskano_xp}
+pepa = Pepa(0, 100, 0)
 
-def rank_up():
-	global xp
-	global level
-	xp -= 50 * level
-	level += 1
-	print(f"{Fore.LIGHTBLUE_EX}Pepo, dostal jsi nový level! Jsi už na levelu " + str(level) + f"!{Fore.RESET}")
+class Item():
+	def __init__(self, nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
+		self.nazev = nazev
+		self.zkratka = zkratka
+		self.cena = cena
+		self.pocet_kusu = pocet_kusu
+		self.barva = barva
+		self.potrebny_level = potrebny_level
+		self.predchozi_itemy = predchozi_itemy
+	
+	def __repr__(self):
+		return f"{self.barva}{self.zkratka} = {self.nazev} ({self.cena} peněz, " + (f"{self.pocet_kusu}" if self.pocet_kusu != None else "nekonečno") + " kusů)"
+	
+	def nakup(self, nazev, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
+		if pocet_kusu != None and pocet_kusu < 1:
+			return self.neni_na_sklade()
+		if not all(value in pepa.koupeno for value in predchozi_itemy):
+			return self.neni_predchozi_item()
+		if pepa.level < self.potrebny_level:
+			return self.nedostatecny_level()
+		if pepa.penize < cena:
+			return self.nedostatek_penez()
+		pepa.penize -= cena
+		if nazev not in pepa.koupeno:
+			pepa.koupeno.append(nazev)
+		return f"{Fore.GREEN}Úspěšně zakoupen {nazev}, Pepo!{Fore.RESET}"
+	
+	def nedostatek_penez(self):
+		return f"{Fore.RED}Error: Nemáš doatatek peněz, Pepo!{Fore.RESET}"
+	
+	def nedostatecny_level(self):
+		return f"{Fore.RED}Error: Nemáš dostatek levelů, Pepo!{Fore.RESET}"
+	
+	def neni_predchozi_item(self):
+		return f"{Fore.RED}Error: Nekoupil sis předchozí věci, Pepo!{Fore.RESET}"
+	
+	def neni_na_sklade(self):
+		return f"{Fore.RED}Error: Vyprodáno!{Fore.RESET}"
+		
+class LifePotion(Item):
+	def __init__(self, nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
+		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
+		
+	def koupit(self):
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		if "Error" not in self.k:
+			pepa.zivoty = 100
+		
+class DrevenyMec(Item):
+	def __init__(self, nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
+		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
+		
+	def koupit(self):
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		if "Error" not in self.k:
+			self.pocet_kusu -= 1
+			pepa.stats[0] = 15
+	
+class DrevenyStit(Item):
+	def __init__(self, nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
+		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
+		
+	def koupit(self):
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		if "Error" not in self.k:
+			self.pocet_kusu -= 1
+			pepa.stats[1] = 40
 
-def koupit(vec):
-	global penize
-	potrebny_level = 1
-	# Cena věcí
+class BronzovyMec(Item):
+	def __init__(self, nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
+		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
+		
+	def koupit(self):
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		if "Error" not in self.k:
+			self.pocet_kusu -= 1
+			pepa.stats[0] = 10
+	
+class BronzovyStit(Item):
+	def __init__(self, nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
+		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
+		
+	def koupit(self):
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		if "Error" not in self.k:
+			self.pocet_kusu -= 1
+			pepa.stats[1] = 30
+		
+class XPMultiplier(Item):
+	def __init__(self, nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
+		super().__init__(nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy)
+		
+	def koupit(self):
+		self.k = self.nakup(self.nazev, self.cena, self.pocet_kusu, self.barva, self.potrebny_level, self.predchozi_itemy)
+		if "Error" not in self.k:
+			self.pocet_kusu -= 1
+			pepa.xp_multiplier += 0.2
+			
+# Inicializace itemů
+lifePotion = LifePotion("Life potion", "L", 25, None, Fore.LIGHTRED_EX, 1, [])
+drevenyMec = DrevenyMec("Dřevěný meč", "DM", 150, 1, Fore.LIGHTBLACK_EX, 3, [])
+drevenyStit = DrevenyStit("Dřevěný štít", "DŠ", 200, 1, Fore.LIGHTBLACK_EX, 3, [])
+bronzovyMec = BronzovyMec("Bronzový meč", "BM", 350, 1, Fore.YELLOW, 7, [])
+bronzovyStit = BronzovyStit("Bronzový štít", "BŠ", 400, 1, Fore.YELLOW, 7, [])
+xpMultiplier = XPMultiplier("XP Multiplier", "XP", 500, 5, Fore.BLUE, 8, ["Dřevěný štít", "Dřevěný meč"])
+itemy = [lifePotion, drevenyMec, drevenyStit, bronzovyMec, bronzovyStit, xpMultiplier]
+
+# Nepřátelé
+#
+
+#shop = {"L": [f"{Fore.LIGHTRED_EX}L = Life potion (25 peněz, nekonečno kusů){Fore.RESET}", True], "DM": [f"{Fore.LIGHTBLACK_EX}DM = Dřevěný meč (3. level, 150 peněz, 1 kus){Fore.RESET}", True], "DŠ": [f"{Fore.LIGHTBLACK_EX}DŠ = Dřevěný štít (3. level, 200 peněz, 1 kus){Fore.RESET}", True], "BM": [f"{Fore.YELLOW}BM = Bronzový meč (7. level, 350 peněz, 1 kus){Fore.RESET}", True], "BŠ": [f"{Fore.YELLOW}BŠ = Bronzový štít (7. level, 400 peněz, 1 kus){Fore.RESET}", True], "XP": [f"{Fore.BLUE}XP = XP 1.2x multiplier (8. level, 500 peněz, {pepa.xp_multiplier} kusů){Fore.RESET}", False]}
+
+def kupovani(vec):
 	match vec:
 		case "L":
-			cena = 25
+			lifePotion.koupit()
+			item_k = lifePotion.k
 		case "DM":
-			cena = 150
-			potrebny_level = 3
+			drevenyMec.koupit()
+			item_k = drevenyMec.k
 		case "DŠ":
-			cena = 200
-			potrebny_level = 3
+			drevenyStit.koupit()
+			item_k = drevenyStit.k
 		case "BM":
-			cena = 350
-			potrebny_level = 7
+			bronzovyMec.koupit()
+			item_k = bronzovyMec.k
 		case "BŠ":
-			cena = 400
-			potrebny_level = 7
+			bronzovyStit.koupit()
+			item_k = bronzovyStit.k
 		case "XP":
-			cena = 500
-			potrebny_level = 8
-	if level >= potrebny_level:
-		if penize >= cena:
-			penize -= cena
-			# Atributy věcí
-			match vec:
-				case "L":
-					global zivoty
-					zivoty = 100
-				case "DM":
-					stats[0] = 10
-					shop.pop(vec)
-					koupeno.append(vec)
-					print(f"{Fore.GREEN}Úspěšně zakoupen Dřevěný meč!{Fore.RESET}")
-				case "DŠ":
-					stats[1] = 40
-					shop.pop(vec)
-					koupeno.append(vec)
-					print(f"{Fore.GREEN}Úspěšně zakoupen Dřevěný štít!{Fore.RESET}")
-				case "BM":
-					stats[0] = 5
-					shop.pop(vec)
-					koupeno.append(vec)
-					print(f"{Fore.GREEN}Úspěšně zakoupen Bronzový meč!{Fore.RESET}")
-				case "BŠ":
-					stats[1] = 30
-					shop.pop(vec)
-					koupeno.append(vec)
-					print(f"{Fore.GREEN}Úspěšně zakoupen Bronzový štít!{Fore.RESET}")
-				case "XP":
-					global xp_multiplier_kusu
-					if shop.get("XP")[-1] == True:
-						if xp_multiplier_kusu == 0:
-							shop.pop(vec)
-						xp_multiplier_kusu -= 1
-						xp_multiplier += 0.2
-						koupeno.append(vec)
-						print(f"{Fore.GREEN}Úspěšně zakoupen XP 1.2x multiplier!{Fore.RESET}")
-					else:
-						print(f"{Fore.LIGHTRED_EX}Nepřededbíhej, Pepo!{Fore.RESET}")
-		else:
-			print(f"{Fore.RED}Nemáš doatatek peněz, Pepo!{Fore.RESET}")
-	else:
-		print(f"{Fore.RED}Nemáš dostatek levelů, Pepo!{Fore.RESET}")
-	return cena
+			xpMultiplier.koupit()
+			item_k = xpMultiplier.k
+		case _:
+			return "Zpět!"
+	return item_k
+
+def shop():
+	print("\n".join(map(str, itemy[:-1])))
+	print(itemy[-1], end="")
+	print(Fore.RESET, end=": ")
 
 # Herní smyčka
 while True:
-	if xp >= 50 * level:
-		rank_up()
-	if "DM" in koupeno and "DŠ" in koupeno or "BM" in koupeno or "BŠ" in koupeno:
-		shop.get("XP")[-1] = True
-	print(f"Pepo, máš {Fore.RED}{zivoty} životů{Fore.RESET} a {Fore.LIGHTMAGENTA_EX}{penize} peněz{Fore.RESET}. Máš {Fore.LIGHTBLUE_EX}level {level}{Fore.BLUE} ({xp} / {50 * int(level)} XP){Fore.RESET}\nChceš se vydat na výpravu? A = Ano, S = Shop: ", end="")
+	if pepa.xp >= 50 * pepa.level:
+		pepa.rank_up()
+	print(pepa, end="")
 	rozhodnuti = input().upper()
 	if rozhodnuti == "A":
-		posledni_vyprava = vyprava()
-		if zivoty <= 0:
+		pepa.vyprava()
+		if pepa.zivoty <= 0:
 			print(f"{Fore.LIGHTRED_EX}Bohužel, Pepa umřel na výpravě.{Fore.RESET}")
 			mixer.music.load("hudba když zemřeš.mp3")
 			mixer.music.play()
 			time.sleep(10)
 			break
-		print(f"{Fore.LIGHTCYAN_EX}Pepo, to bylo ofous! Ztratil jsi {Fore.RED}" + str(posledni_vyprava.get("ztraceno_zivotu")) + f" životů{Fore.RESET}{Fore.LIGHTCYAN_EX} a získal jsi {Fore.LIGHTMAGENTA_EX}" + str(posledni_vyprava.get("ziskano_penez")) + f" peněz{Fore.RESET}{Fore.LIGHTCYAN_EX}.\nDostal jsi {Fore.BLUE}" + str(posledni_vyprava.get("ziskano_xp")) + f" XP{Fore.RESET}{Fore.LIGHTCYAN_EX}!{Fore.RESET}{Fore.LIGHTGREEN_EX}\nStiskněte COKOLI pro pokračování: {Fore.RESET}", end="")
+			
+		print(f"{Fore.LIGHTCYAN_EX}Pepo, to bylo ofous! Ztratil jsi {Fore.RED}{pepa.zivotu_ztraceno()} životů{Fore.RESET}{Fore.LIGHTCYAN_EX} a získal jsi {Fore.LIGHTMAGENTA_EX}{pepa.penez_ziskano()} peněz{Fore.RESET}{Fore.LIGHTCYAN_EX}.\nDostal jsi {Fore.BLUE}{pepa.xp_ziskano()} XP{Fore.RESET}{Fore.LIGHTCYAN_EX}!{Fore.RESET}{Fore.LIGHTGREEN_EX}\nStiskni COKOLI pro pokračování: {Fore.RESET}", end="")
 		input()
 	elif rozhodnuti == "S":
-		print(f"{Fore.MAGENTA}Co chceš koupit?{Fore.RESET}\n", end="")
-		for i in shop:
-			if i != list(shop.keys())[-1]:
-				print("\n" + shop.get(i)[0], end="")
-			elif shop.get(i)[-1]:
-				print("\n" + shop.get(i)[0], end=": ")
-			else:
-				print(end=": ")
-		vec = input().upper()
-		if vec in shop:
-			koupit(vec)
-		else:
-			print("Zpět!\n")
+		print(f"{Fore.MAGENTA}Co chceš koupit?{Fore.RESET}\n")
+		shop()
+		vyber = input().upper()
+		print(kupovani(vyber))
 	else:
 		print("What?\n")
