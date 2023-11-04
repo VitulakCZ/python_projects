@@ -1,5 +1,6 @@
 import math
 
+# Dobrý den, tohoto komentáře si prosím nevšímejte, jelikož se jedná o test gitu. Děkujeme za pochopení.
 def mody(obvod_obsah, tvar, obracene):
 	input_text2 = None
 	if not obracene:
