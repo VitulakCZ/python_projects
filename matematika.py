@@ -38,9 +38,10 @@ def krizovatka(tvar, obvod_obsah):
 		match tvar:
 			case "Č":
 				ctverec(obvod_obsah, value, obracene)
-				break
 			case "O":
-				obdelnik(obvod_obsah, value, value2, obracene)
+				obdelnik(obvod_obsah, value, value4, obracene)
+			case "T":
+				trojuhelnik(obvod_obsah, value, value2, obracene)
 
 def ctverec(obvod_obsah, value, obracene):
 	try:

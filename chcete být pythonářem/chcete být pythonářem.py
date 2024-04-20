@@ -70,22 +70,22 @@ otazky = {
 }
 
 # Intro
-#mixer.music.load("chcete být pythonářem znělka.mp3")
-#mixer.music.play()
-#time.sleep(1.3)
-#print("KV uvádí...")
-#time.sleep(3.3)
-#print("Chcete Být Pythonářem!")
-#time.sleep(3.3)
-#print(f"{Fore.LIGHTBLACK_EX}Speciální poděkování firmě {Fore.RED}Sony Pictures Television{Fore.LIGHTBLACK_EX} za poskytnutí licence {Fore.RED}WHO WANTS TO BE A MILLIONAIRE?{Fore.RESET}")
-#time.sleep(1.6)
-#print(f"{Fore.LIGHTBLACK_EX}Hra vytvořena v programovacím jazyku {Fore.RED}Python 3.10.0 64-bit{Fore.RESET}")
-#time.sleep(0.9)
-#print(f"{Fore.LIGHTBLACK_EX}© 2022 VŠECHNA PRÁVA VYHRAZENA!{Fore.RESET}")
-#time.sleep(0.9)
-#print("Počkejte prosím...")
-#time.sleep(1.5)
-#mixer.music.stop()
+mixer.music.load("chcete být pythonářem znělka.mp3")
+mixer.music.play()
+time.sleep(1.3)
+print("KV uvádí...")
+time.sleep(3.3)
+print("Chcete Být Pythonářem!")
+time.sleep(3.3)
+print(f"{Fore.LIGHTBLACK_EX}Speciální poděkování firmě {Fore.RED}Sony Pictures Television{Fore.LIGHTBLACK_EX} za poskytnutí licence {Fore.RED}WHO WANTS TO BE A MILLIONAIRE?{Fore.RESET}")
+time.sleep(1.6)
+print(f"{Fore.LIGHTBLACK_EX}Hra vytvořena v programovacím jazyku {Fore.RED}Python 3.10.0 64-bit{Fore.RESET}")
+time.sleep(0.9)
+print(f"{Fore.LIGHTBLACK_EX}© 2022 VŠECHNA PRÁVA VYHRAZENA!{Fore.RESET}")
+time.sleep(0.9)
+print("Počkejte prosím...")
+time.sleep(1.5)
+mixer.music.stop()
 # Hra
 nerozumel = 0
 nerozumel_kolo = False
@@ -93,7 +93,7 @@ vyhral = None
 for otazka in count(start=1):
     otazka -= nerozumel
     if not nerozumel_kolo:
-        random_index = 1 #random.randint(0, 1)
+        random_index = random.randint(0, 1)
     if otazka > list(otazky.keys())[-1]:
         vyhral = True
         break
