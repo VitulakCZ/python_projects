@@ -39,7 +39,7 @@ def krizovatka(tvar, obvod_obsah):
 			case "Č":
 				ctverec(obvod_obsah, value, obracene)
 			case "O":
-				obdelnik(obvod_obsah, value, value4, obracene)
+				obdelnik(obvod_obsah, value, value2, obracene)
 			case "T":
 				trojuhelnik(obvod_obsah, value, value2, obracene)
 
@@ -96,6 +96,9 @@ def geometrie():
 		print("Tvar není legální!\n")
 		geometrie()
 	if tvar == "Z":
+		zaklad()
+	if tvar == "T":
+		print("WIP!")
 		zaklad()
 	obvod_obsah = input("Chcete vypočítat obvod, obsah nebo obvod na obsah? [o/S/oS]: ").lower()
 	if obvod_obsah not in ["o", "s", "os"]:
