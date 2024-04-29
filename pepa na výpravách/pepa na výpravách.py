@@ -9,6 +9,7 @@ mixer.music.load("hudba do pozadí.mp3")
 mixer.music.play(-1)
 
 # Intro
+'''
 time.sleep(0.8)
 print("KV uvádí...")
 time.sleep(1.2)
@@ -18,7 +19,7 @@ print(f"{Fore.LIGHTBLACK_EX}Speciální poděkování firmě {Fore.RED}Rare{Fore
 time.sleep(1.6)
 print(f"{Fore.LIGHTBLACK_EX}© 2021 - 2022 VŠECHNA PRÁVA VYHRAZENA!{Fore.RESET}")
 time.sleep(4.9)
-
+'''
 # Pepa
 class Pepa():
 	def __init__(self, penize, zivoty, xp):
@@ -183,9 +184,15 @@ class Drop(Item):
 
 class DamageUpgrade(Drop):
 	def __init__(self, nazev, zkratka, cena, barva):
-		self.add_damage = random.randint(300 * (pepa.level // 3), 300 * (pepa.level // 2))
+		self.add_damage = random.randint(200 * (pepa.level // 3), 200 * (pepa.level // 2))
 		super().__init__(nazev, zkratka, cena, barva, f"+{self.add_damage} damage")
 		pepa.damage += self.add_damage
+
+class HealthUpgrade(Drop):
+	def __init__(self, nazev, zkratka, cena, barva):
+		self.add_health = random.randint(10 * (pepa.level // 3), 10 * (pepa.level // 2))
+		super().__init__(nazev, zkratka, cena, barva, f"+{self.add_health} životů")
+		pepa.max_zivoty += self.add_health
 
 # Inicializace itemů
 lifePotion = LifePotion("Life potion", "L", 25, None, Fore.LIGHTRED_EX, 1, [], 100)
@@ -196,7 +203,9 @@ bronzovyStit = Stit("Bronzový štít", "BŠ", 400, 1, Fore.YELLOW, 7, ["Dřevě
 xpMultiplier = XPMultiplier("XP Multiplier", "XP", 500, 5, Fore.BLUE, 8, ["Dřevěný meč", "Dřevěný štít"])
 itemy = [lifePotion, drevenyMec, drevenyStit, bronzovyMec, bronzovyStit, xpMultiplier]
 dropy = [
-	{"DamageUpgrade": ["Damage upgrade", "DUP", 100, "Fore.WHITE"]}
+	{"DamageUpgrade": ["Damage upgrade", "DUP", 100, "Fore.CYAN"]},
+	{"HealthUpgrade": ["Health upgrade", "HUP", 100, "Fore.LIGHTRED_EX"]}
+
 ]
 
 # Nepřátelé
@@ -218,8 +227,9 @@ class Nepritel():
 			if x > 0:
 				if x / 10 >= per - x / 5:
 					drop = random.choice(dropy)
-					drop_c = str(list(random.choice(dropy).keys())[0])
-					exec(f"drop_class = {drop_c}(\"{list(drop.values())[0][0]}\", \"{list(drop.values())[0][1]}\", {list(drop.values())[0][2]}, {list(drop.values())[0][3]});drops.append(drop_class)")
+					print(drop)
+					drop_c = str(list(drop.keys())[0])
+					exec(f"drops.append({drop_c}(\"{drop.get(drop_c)[0]}\", \"{drop.get(drop_c)[1]}\", {drop.get(drop_c)[2]}, {drop.get(drop_c)[3]}))")
 			y -= 1
 		return drops
 
