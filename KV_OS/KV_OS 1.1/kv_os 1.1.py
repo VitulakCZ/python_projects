@@ -865,39 +865,53 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 	elif home == "P":
 		promenne = {}
 		while True:
-			string = input(">>> ")
-			if string.startswith("writeln(\"") and string.endswith("\")"):
-				to_print = string.split("\"")
-				try:
-					zkouska = to_print[3]
-					print("ERROR!")
-				except IndexError:
-					print(to_print[1])
-			elif string.startswith("dfn(") and string.endswith(")"):
-				to_define = string.split("(")[1].split(")")
-				if "=" in to_define[0]:
-					finalni = to_define[0].split("=")
-					try:
-						zkouska = to_define[2]
-						print("ERROR!")
-					except IndexError:
-						finalni[0] = finalni[0].replace(" ", "")
-						finalni[1] = finalni[1].replace(" ", "")
-						promenne[finalni[0]] = finalni[1]
+			prg = input(">>> ")
+			if prg == "write()":
+				write = input(">>>> ")
+				print(write)
+			elif prg == "write(dfn)":
+				write_var = input(">>>> ")
+				if write_var in promenne:
+					print(promenne.get(write_var))
 				else:
-					print("ERROR!")
-			elif string.startswith("writeln(") and string.endswith(")") and "\"" not in string:
-				to_print = string.split("(")[1].split(")")
-				try:
-					zkouska = to_print[2]
-					print("ERROR!")
-				except IndexError:
-					if to_print[0] in promenne:
-						print(promenne[to_print[0]])
-					else:
-						print("ERROR!")
+					print(f"{Fore.RED}This isn't a variable!{Fore.RESET}")
+			elif prg.startswith("write(\"") and prg.endswith("\")"):
+				novy_write = prg.split("write(\"", maxsplit=1)[1].split("\")")[0]
+				if "\"" in novy_write:
+					print(f"{Fore.RED}You can't have \" in your text!{Fore.RESET}")
+				else:
+					print(novy_write)
+			elif prg.startswith("write(") and not prg.startswith("write(\"") and prg.endswith(")") and not prg.endswith("\")"):
+				w_dfn = prg.split("write(", maxsplit=1)[1].split(")")[0]
+				if w_dfn in promenne:
+					print(promenne.get(w_dfn))
+				else:
+					print(f"{Fore.RED}This isn't a variable!{Fore.RESET}")
+			elif prg == "dfn()":
+				dfn = input(">>>> ")
+				dfn_jako = input("= ")
+				promenne[dfn] = dfn_jako
+			elif prg == "dfn(show)":
+				for promenna in promenne:
+					print(f"{promenna} = {promenne.get(promenna)}")
+			elif prg.startswith("dfn(") and prg.endswith(")") and " = " in prg and prg != "dfn()":
+				novy_dfn = prg.split("dfn(", maxsplit=1)[1].split(" = ", maxsplit=1)
+				promenne[novy_dfn[0]] = novy_dfn[1][:-1]
+			elif prg == "while true":
+				kolo = input(">>>> ")
+				ready = input("If you are ready, press B: ").upper()
+				if ready == "B":
+					while True:
+						print(kolo)
+				else:
+					print("Another key!")
+			elif prg == "cls" or prg == "clear":
+				os.system(clear)
+			elif prg == "exit" or prg == "exit()":
+				os.system(clear)
+				break
 			else:
-				print("ERROR!")
+				print("Another key!")
 	elif home == "N":
 		if language == "en":
 			print(f"""\
