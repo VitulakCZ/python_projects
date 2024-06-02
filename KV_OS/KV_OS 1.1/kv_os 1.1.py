@@ -1,10 +1,19 @@
 import os
+import time
+import math
 from colorama import init, Fore, Style
 from cryptography.fernet import Fernet
 from pygame import mixer
 mixer.init()
 init()
 clear = "clear" if os.name == "posix" else "cls"
+
+def convert_time(endtime):
+	endtime_hrs = endtime // 3600
+	endtime_mins = endtime % 3600 // 60
+	endtime_secs = endtime - endtime_hrs * 3600 - endtime_mins * 60
+	endtime_str = f"{endtime_hrs}h {endtime_mins}min {endtime_secs}s"
+	return endtime_str
 
 def load_key():
 	try:
@@ -39,7 +48,7 @@ while True:
 		home = input().upper()
 	else:
 		if language == "en":
-			print(f"{Style.BRIGHT}{Fore.YELLOW}You are now log in as {user}!{Style.RESET_ALL}")
+			print(f"{Style.BRIGHT}{Fore.YELLOW}You are now logged in as {user}!{Style.RESET_ALL}")
 			home = input("G = Game\nP = Programming in KV script beta\nN = Patch notes\nL = Logout\nO = Options\nE = Shutdown: ").upper()
 		elif language == "cz":
 			print(f"{Style.BRIGHT}{Fore.YELLOW}Jsi přihlášen jako {user}!{Style.RESET_ALL}")
@@ -50,23 +59,35 @@ while True:
 	os.system(clear)
 	if home == "G":
 		if language == "en":
-			game = input("__________________\n       Game\n__________________\nprocesing...\npress S = Singleplayer\n      M = Multiplayer\n      L = Load the game: ").upper()
+			game = input("__________________\n       Game\n__________________\nprocesing...\npress S = Singleplayer\n      M = Multiplayer\n      L = Load the game\nL = Leaderboards: ").upper()
 		elif language == "cz":
-			game = input("__________________\n        Hra\n__________________\nnačítání...\nstiskněte S = Singleplayer\n          M = Multiplayer      L = Načíst hru: ").upper()
+			game = input("__________________\n        Hra\n__________________\nnačítání...\nstiskněte S = Singleplayer\n          M = Multiplayer      L = Načíst hru\nL = Žebříčky: ").upper()
 		elif language == "de":
-			game = input("_________________\n      Spiel\n_________________\nWird geladen...\ndrücke S = Singleplayer\n       M = Multiplayer       L = Laden Sie das Spiel: ").upper()
+			game = input("_________________\n      Spiel\n_________________\nWird geladen...\ndrücke S = Singleplayer\n       M = Multiplayer       L = Laden Sie das Spiel\nL = Bestenlisten: ").upper()
 		os.system(clear)
 		if game == "S":
 			obtiznost = None
+			speedrun_mod = False
+			hrat = True
 			while True:
 				if language == "en":
-					obtiznost = input("On which difficulty do you want to play?\nE = Easy\nN = Normal\nH = Hard: ").upper()
+					obtiznost = input("On which difficulty do you want to play?\nE = Easy\nN = Normal\nH = Hard\n" + (Fore.LIGHTRED_EX if not speedrun_mod else Fore.LIGHTGREEN_EX) + "S = Speedrun mode " + ("off" if not speedrun_mod else "on") + Fore.RESET + ": ").upper()
 				elif language == "cz":
-					obtiznost = input("Na jakou chceš hrát obtížnost?\nE = Easy\nN = Normal\nH = Hard: ").upper()
+					obtiznost = input("Na jakou chceš hrát obtížnost?\nE = Easy\nN = Normal\nH = Hard\n" + (Fore.LIGHTRED_EX if not speedrun_mod else Fore.LIGHTGREEN_EX) + "S = Speedrun režim " + ("vypnutý" if not speedrun_mod else "zapnutý") + Fore.RESET + ": ").upper()
 				elif language == "de":
-					obtiznost = input("Auf welchem Schwierigkeitsgrad möchtest du spielen?\nE = Easy\nN = Normal\nH = Hard: ").upper()
+					obtiznost = input("Auf welchem Schwierigkeitsgrad möchtest du spielen?\nE = Easy\nN = Normal\nH = Hard\n" + (Fore.LIGHTRED_EX if not speedrun_mod else Fore.LIGHTGREEN_EX) + "S = Speedrun-Modus " + ("ausgeschaltet" if not speedrun_mod else "aktiviert") + Fore.RESET + ": ").upper()
 				os.system(clear)
-				if obtiznost == "E":
+				if obtiznost == "S":
+					if user is not None:
+						speedrun_mod = not speedrun_mod
+					else:
+						if language == "en":
+							print(f"{Fore.RED}You have to be logged in to be able to play Speedrun mode!{Fore.RESET}\n")
+						elif language == "cz":
+							print(f"{Fore.RED}Musíte být přihlášení, abyste mohli hrát Speedrun režim!{Fore.RESET}\n")
+						elif language == "de":
+							print(f"{Fore.RED}Sie müssen angemeldet sein, um den Speedrun-Modus spielen zu können!{Fore.RESET}\n")
+				elif obtiznost == "E":
 					if language == "en":
 						input("""\
 EASY difficulty
@@ -172,24 +193,36 @@ SCHWERE Schwierigkeit
 Drücken Sie eine beliebige Taste, um fortzufahren: """)
 					break
 				else:
-					print("Another key!\n")
+					print("Another key!")
+					hrat = False
+					break
+			if not hrat:
+				continue
 			os.system(clear)
 			mixer.music.load("kv_war_simulator_soundtrack.wav")
 			mixer.music.play(-1)
 			if language == "en":
 				print(f"{Fore.YELLOW}This is upgraded version of the game textova_hra.py. If you want to have old feelings, download KV OS 0.6.{Fore.RESET}")
+				if speedrun_mod:
+					print(f"{Fore.YELLOW}{Style.BRIGHT}You are playing Speedrun mode, your time and vicory round will be put on the leaderboards. Good luck!{Fore.RESET}{Style.RESET_ALL}")
 			elif language == "cz":
 				print(f"{Fore.YELLOW}Toto je vylepšená verze hry textova_hra.py. Jestli chcete mít zážitek ze hry textova_hra, jako takový, stáhněte si KV OS BETA 0.6.{Fore.RESET}")
+				if speedrun_mod:
+					print(f"{Fore.YELLOW}{Style.BRIGHT}Hrajete ve Speedrun režimu, váš čas a vítězné kolo budou zapsány na žebříčky. Hodně štěstí!{Fore.RESET}{Style.RESET_ALL}")
 			elif language == "de":
 				print(f"{Fore.YELLOW}Dies ist eine aktualisierte Version des Spiels textova_hra.py. Wenn Sie alte Gefühle haben wollen, laden Sie KV OS 0.6 herunter.{Fore.RESET}")
+				if speedrun_mod:
+					print(f"{Fore.YELLOW}{Style.BRIGHT}Du spielst den Speedrun-Modus, deine Zeit und die Siegrunde werden in die Bestenlisten eingetragen. Viel Glück!{Fore.RESET}{Style.RESET_ALL}")
 			while True:
 				if language == "en":
-					menu = input("Welcome, do you want to play this game? A = yes, N = no: ")
+					menu = input("Welcome, do you want to play this game? A = yes, N = no: ").upper()
 				elif language == "cz":
-					menu = input("Vítej, cheš hrát tuto hru? A = ano N = ne: ")
+					menu = input("Vítej, cheš hrát tuto hru? A = ano N = ne: ").upper()
 				elif language == "de":
-					menu = input("Willkommen, möchten Sie dieses Spiel spielen? A = ja, N = nein: ")
+					menu = input("Willkommen, möchten Sie dieses Spiel spielen? A = ja, N = nein: ").upper()
 				if menu == "A":
+					if speedrun_mod:
+						starttime = time.time()
 					if obtiznost == "H":
 						penize = 0
 					else:
@@ -211,6 +244,30 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 						if obsadit == 0:
 							mixer.music.load("teticka_song.wav")
 							mixer.music.play(-1)
+							if speedrun_mod:
+								endtime = math.ceil((time.time() - starttime))
+								endtime_str = convert_time(endtime)
+								if language == "en":
+									print(f"Time: {endtime_str}")
+								elif language == "cz":
+									print(f"Čas: {endtime_str}")
+								elif language == "de":
+									print(f"Zeit: {endtime_str}")
+								list_jmen = []
+								try:
+									with open('data11.txt', 'r') as f:
+										for line in f.readlines():
+											data = line.rstrip()
+											list_jmen.append(data.split("|")[0])
+								except FileNotFoundError:
+									pass
+								with open('data11.txt', 'a') as f:
+									user_cpy = user
+									pocet = 1
+									while user_cpy in list_jmen:
+										pocet += 1
+										user_cpy = user + " " + str(pocet)
+									f.write(user_cpy + "|" + fer.encrypt(endtime_str.encode()).decode() + "|" + fer.encrypt(str(kola).encode()).decode() + "|" + obtiznost + "\n")
 							if language == "en":
 								input("CONGRATULATIONS!!! You finished the game!! You are good!!\nPress any key to continue: ")
 							elif language == "cz":
@@ -409,11 +466,11 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 								print("Du hast es nicht geschafft, das Spiel unter 50 Runden zu beenden.\nGAME OVER")
 							break
 						if language == "en":
-							hra = input(str(kola) + ". ROUND!\nK = Buy soldiers, V = War, I = Invest, B = Bank, D = Next round, E = exit ")
+							hra = input(str(kola) + ". ROUND!\nK = Buy soldiers, V = War, I = Invest, B = Bank, D = Next round, E = exit: ").upper()
 						elif language == "cz":
-							hra = input(str(kola) + ". KOLO!\nK = Koupit vojáky, V = Válka, I = Investovat, B = Banka, D = Další kolo, E = Pryč ")
+							hra = input(str(kola) + ". KOLO!\nK = Koupit vojáky, V = Válka, I = Investovat, B = Banka, D = Další kolo, E = Pryč: ").upper()
 						elif language == "de":
-							hra = input(str(kola) + ". RUNDE!\nK = Soldaten kaufen, V = Krieg, I = Investieren, B = Bank, D = Nächste Runde, E = Ausgang ")
+							hra = input(str(kola) + ". RUNDE!\nK = Soldaten kaufen, V = Krieg, I = Investieren, B = Bank, D = Nächste Runde, E = Ausgang: ").upper()
 						if hra == "E":
 							if language == "en":
 								print("You left the game.")
@@ -469,11 +526,11 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 							banka = 0
 						elif hra == 'V':
 							if language == "en":
-								valka = input("You still have to occupy " + str(obsadit) + " areas. On a one area you have to have 2000 soldiers, do you want to attack? A = yes, N = no ")
+								valka = input("You still have to occupy " + str(obsadit) + " areas. On a one area you have to have 2000 soldiers, do you want to attack? A = yes, N = no ").upper()
 							elif language == "cz":
-								valka = input("musíš obsadit ještě " + str(obsadit) + " území. Na jedno území potřebuješ 2000 vojáků, chceš zaútočit? A = ano, N = ne ")
+								valka = input("musíš obsadit ještě " + str(obsadit) + " území. Na jedno území potřebuješ 2000 vojáků, chceš zaútočit? A = ano, N = ne ").upper()
 							elif language == "de":
-								valka = input("Sie müssen immer noch " + str(obsadit) + " Bereiche besetzen. Auf einem Gebiet muss man 2000 Soldaten haben, will man angreifen? A = ja, N = nein ")
+								valka = input("Sie müssen immer noch " + str(obsadit) + " Bereiche besetzen. Auf einem Gebiet muss man 2000 Soldaten haben, will man angreifen? A = ja, N = nein ").upper()
 							if valka == 'A':
 								if vojaci >= 2000:
 									vojaci -= 2000
@@ -542,11 +599,11 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 									print("Sie haben das Maximum geliehen, Sie können!")
 						elif hra == "I":
 							if language == "en":
-								investice = input("How many do you want to invest?\n6 (+1 money per round)\n10 (+2 money per round)")
+								investice = input("How many do you want to invest?\n6 (+1 money per round)\n10 (+2 money per round): ")
 							elif language == "cz":
-								investice = input("Kolik chceš investovat?\n6 (+1 peníz za kolo)\n10 (+2 peníze za kolo)")
+								investice = input("Kolik chceš investovat?\n6 (+1 peníz za kolo)\n10 (+2 peníze za kolo): ")
 							elif language == "de":
-								investice = input("Wie viele möchten Sie investieren?n6 (+1 Geld pro Runde)n10 (+2 Geld pro Runde)")
+								investice = input("Wie viele möchten Sie investieren?n6 (+1 Geld pro Runde)n10 (+2 Geld pro Runde): ")
 							if investice == "6":
 								if penize_za_kolo < 10 and obtiznost == "E":
 									if penize >= 6:
@@ -648,6 +705,52 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 						print("Špatné zadání!\n")
 					elif language == "de":
 						print("Falsche Eingabe!\n")
+		elif game == "L":
+			if language == "en":
+				print("Leaderboards")
+			try:
+				leaderboards_easy = {}
+				leaderboards_normal = {}
+				leaderboards_hard = {}
+				with open("data11.txt", "r") as f:
+					for line in f.readlines():
+						data = line.rstrip()
+						jmeno, zasifrovany_cas, zasifrovane_kolo, obtiznost = data.split("|")
+						if obtiznost == "E":
+							leaderboards_easy[jmeno] = [fer.decrypt(zasifrovany_cas).decode(), int(fer.decrypt(zasifrovane_kolo).decode())]
+						elif obtiznost == "N":
+							leaderboards_normal[jmeno] = [fer.decrypt(zasifrovany_cas).decode(), int(fer.decrypt(zasifrovane_kolo).decode())]
+						elif obtiznost == "H":
+							leaderboards_hard[jmeno] = [fer.decrypt(zasifrovany_cas).decode(), int(fer.decrypt(zasifrovane_kolo).decode())]
+				leaderboards_easy = dict(sorted(leaderboards_easy.items(), key=lambda item: item[1][1]))
+				leaderboards_normal = dict(sorted(leaderboards_normal.items(), key=lambda item: item[1][1]))
+				leaderboards_hard = dict(sorted(leaderboards_hard.items(), key=lambda item: item[1][1]))
+				nejdelsi_jmeno = ""
+				for jmeno in leaderboards_easy.keys():
+					if len(jmeno) > len(nejdelsi_jmeno):
+						nejdelsi_jmeno = jmeno
+				print(f"{Style.BRIGHT}EASY:{Style.RESET_ALL}\nName" + " "*(len(nejdelsi_jmeno) - 4) + "\tRound\tTime")
+
+				for i, jmeno in enumerate(leaderboards_easy.keys()):
+					print(f"{jmeno}" + " "*(len(nejdelsi_jmeno) - len(jmeno)) + f"\t{list(leaderboards_easy.values())[i][1]}\t{list(leaderboards_easy.values())[i][0]}")
+				nejdelsi_jmeno = ""
+				for jmeno in leaderboards_normal.keys():
+					if len(jmeno) > len(nejdelsi_jmeno):
+						nejdelsi_jmeno = jmeno
+				print(f"{Style.BRIGHT}NORMAL:{Style.RESET_ALL}\nName" + " "*(len(nejdelsi_jmeno) - 4) + "\tRound\tTime")
+
+				for i, jmeno in enumerate(leaderboards_normal.keys()):
+					print(f"{jmeno}" + " "*(len(nejdelsi_jmeno) - len(jmeno)) + f"\t{list(leaderboards_normal.values())[i][1]}\t{list(leaderboards_normal.values())[i][0]}")
+				nejdelsi_jmeno = ""
+				for jmeno in leaderboards_normal.keys():
+					if len(jmeno) > len(nejdelsi_jmeno):
+						nejdelsi_jmeno = jmeno
+				print(f"{Style.BRIGHT}HARD:{Style.RESET_ALL}\nName" + " "*(len(nejdelsi_jmeno) - 4) + "\tRound\tTime")
+
+				for i, jmeno in enumerate(leaderboards_hard.keys()):
+					print(f"{jmeno}" + " "*(len(nejdelsi_jmeno) - len(jmeno)) + f"\t{list(leaderboards_hard.values())[i][1]}\t{list(leaderboards_hard.values())[i][0]}")
+			except FileNotFoundError:
+				print("NEE!")
 		elif game == "M":
 			if language == "en":
 				print(f"{Fore.YELLOW}WARNING: This is the multiplayer game, that insn't translated!\nBe sure, you know, what are you doing, or learn czech!{Fore.RESET}")
@@ -1012,7 +1115,7 @@ PRESS ANY KEY TO CONTINUE: """, end="")
   • Opravili jsme chybu, kde na jakémkoliv Windows cmd nefungovaly barvy
   • Ve hře si můžete změnit obtížnost
   • Zašifrovali jsme přihlašovací systém
-0.8 VYPÝNACÍ AKTUALIZACE:
+0.8 VYPÍNACÍ AKTUALIZACE:
   • Nespamovací obrazovka při vypnutí
 0.8 HUDEBNÍ A BAREVNÁ AKTUALIZACE:
   • Odebrali jsme problémy s barvami na Windows a Mac terminálu
@@ -1180,7 +1283,7 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 						break
 		except FileNotFoundError:
 			if language == "en":
-				print(f"You haven't any accounts yet, please, register!\n")
+				print(f"You haven't got any accounts yet, please, register!\n")
 			elif language == "cz":
 				print("Nemáte zatím žádné účty, prosím, zaregistrujte se!\n")
 			elif language == "de":
