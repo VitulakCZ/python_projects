@@ -94,7 +94,7 @@ EASY difficulty
 - You start with 3 mld. money
 - You start with 2000 soldiers
 - Until you don't invest, you get 2 mld. money per round
-- If you want to win, you have to have 25 areas
+- If you want to win, you have to have 28 areas
 - You can invest to 10 money per round
 - Invensions come each 10 rounds to your country
 - Invasions are always per 1000 soldiers
@@ -105,7 +105,7 @@ EASY obtížnost
 - Začínáte s 3 mld. penězi
 - Začínáte s 2000 vojáky
 - Dokud neinvestujete, získáváte 2 mld. peněz za kolo
-- Chcete-li vyhrát, musíte získat 25 území
+- Chcete-li vyhrát, musíte získat 28 území
 - Investovat můžete do 10 peněz za kolo
 - Invaze do vaší země se konají každých 10 kol
 - Invaze jsou vždy po 1000 vojácích
@@ -116,7 +116,7 @@ EINFACHE Schwierigkeit
 - Sie beginnen mit 3 mld. Geld
 - Sie beginnen mit 2000 Soldaten
 - Bis Sie nicht investieren, erhalten Sie 2 mld. Geld pro Runde
-- Wenn du gewinnen willst, musst du 25 Gebiete haben
+- Wenn du gewinnen willst, musst du 28 Gebiete haben
 - Sie können bis zu 10 Geld pro Runde investieren
 - Erfindungen kommen alle 10 Runden in dein Land
 - Invasionen sind immer pro 1000 Soldaten
@@ -129,7 +129,7 @@ NORMAL difficulty
 - You start with 3 mld. money
 - You don't start with any soldiers
 - Until you don't invest, you get 2 mld. money per round
-- If you want to win, you have to have 55 areas
+- If you want to win, you have to have 59 areas
 - You can invest to 5 money per round
 - Invasions come each 5 rounds to your country
 - Invasions are always per 1000 soldiers
@@ -140,7 +140,7 @@ NORMAL obtížnost
 - Začínáte s 3 mld. penězi
 - Nezačínáte s žádnými vojáky
 - Dokud neinvestujete, získáváte 2 mld. peněz za kolo
-- Chcete-li vyhrát, musíte získat 55 území
+- Chcete-li vyhrát, musíte získat 59 území
 - Investovat můžete do 5 peněz za kolo
 - Invaze do vaší země se konají každých 5 kol
 - Invaze jsou vždy po 1000 vojácích
@@ -151,7 +151,7 @@ NORMALE Schwierigkeit
 - Sie beginnen mit 3 mld. Geld
 - Du fängst nicht mit irgendwelchen Soldaten an
 - Bis Sie nicht investieren, erhalten Sie 2 mld. Geld pro Runde
-- Wenn du gewinnen willst, musst du 55 Gebiete haben
+- Wenn du gewinnen willst, musst du 59 Gebiete haben
 - Sie können bis zu 5 Geld pro Runde investieren
 - Invasionen kommen alle 5 Runden in dein Land
 - Invasionen sind immer pro 1000 Soldaten
@@ -233,9 +233,9 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 						vojaci = 0
 					kola = 1
 					if obtiznost == "E":
-						obsadit = 25
+						obsadit = 28
 					elif obtiznost == "N":
-						obsadit = 55
+						obsadit = 59
 					elif obtiznost == "H":
 						obsadit = 70
 					banka = 0
@@ -274,7 +274,8 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 								input("GRATULACE!!! Dohrál jsi hru!! Jsi dobrý!!\nStiskni cokoli pro pokračování: ")
 							elif language == "de":
 								input("HERZLICHE GLÜCKWÜNSCHE!!! Du hast das Spiel beendet!! Du bist gut!!\nDrücken Sie eine beliebige Taste, um fortzufahren: ")
-							mixer.music.stop()
+							mixer.music.load("kv_war_simulator_soundtrack.wav")
+							mixer.music.play(-1)
 							os.system(clear)
 							break
 						elif kola == 5 and obtiznost in ["N", "H"]:
@@ -493,11 +494,11 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 										penize -= voj // 1000
 										vojaci += voj
 										if language == "en":
-											print("You bought 1000 soldiers, total amount of them is " + str(vojaci) + ", you have " + str(penize) + " money left.")
+											print(f"You bought {voj} soldiers, total amount of them is " + str(vojaci) + ", you have " + str(penize) + " money left.")
 										elif language == "cz":
-											print("Nakoupeno 1000 vojáků, celkem jich máš " + str(vojaci) + ", zbývá ti " + str(penize) + " peněz.")
+											print(f"Nakoupeno {voj} vojáků, celkem jich máš " + str(vojaci) + ", zbývá ti " + str(penize) + " peněz.")
 										elif language == "de":
-											print("Sie haben 1000 Soldaten gekauft, der Gesamtbetrag von ihnen ist " + str(vojaci) + ", Sie haben " + str(penize) + " Geld übrig.")
+											print(f"Sie haben {voj} Soldaten gekauft, der Gesamtbetrag von ihnen ist " + str(vojaci) + ", Sie haben " + str(penize) + " Geld übrig.")
 									else:
 										if language == "en":
 											print("YOU DON'T HAVE ENOUGH MONEY\n")
@@ -548,6 +549,8 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 										print("NEMÁŠ DOSTATEK VOJÁKŮ!\n")
 									elif language == "de":
 										print("DU HAST NICHT GENUG SOLDATEN!\n")
+							elif valka == 'N':
+								pass
 							else:
 								if language == "en":
 									print("Wrong input!\n")
@@ -603,7 +606,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 							elif language == "cz":
 								investice = input("Kolik chceš investovat?\n6 (+1 peníz za kolo)\n10 (+2 peníze za kolo): ")
 							elif language == "de":
-								investice = input("Wie viele möchten Sie investieren?n6 (+1 Geld pro Runde)n10 (+2 Geld pro Runde): ")
+								investice = input("Wie viele möchten Sie investieren?\n6 (+1 Geld pro Runde)n10 (+2 Geld pro Runde): ")
 							if investice == "6":
 								if penize_za_kolo < 10 and obtiznost == "E":
 									if penize >= 6:
@@ -640,7 +643,12 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 										elif language == "de":
 											print("DU HAST NICHT GENUG GELD!!\n")
 								else:
-									print("Už jsi investoval až moc peněz!")
+									if language == "en":
+										print("You've already invested too much money!")
+									elif language == "cz":
+										print("Už jsi investoval až moc peněz!")
+									elif language == "de":
+										print("Sie haben bereits zu viel Geld investiert!")
 							elif investice == "10":
 								if penize_za_kolo < 9 and obtiznost == "E":
 									if penize >= 10:
@@ -653,13 +661,22 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 										elif language == "de":
 											print(str(penize_za_kolo) + " Geld pro Runde")
 									else:
-										print("NEMÁŠ DOSTATEK FINANCÍ!!\n")
+										if language == "en":
+											print("YOU DON'T HAVE ENOUGH MONEY!!\n")
+										elif language == "cz":
+											print("NEMÁŠ DOSTATEK FINANCÍ!!\n")
+										elif language == "de":
+											print("DU HAST NICHT GENUG GELD!!\n")
 								elif penize_za_kolo < 4 and obtiznost in ["N", "H"]:
 									if penize >= 10:
 										penize -= 10
 										penize_za_kolo += 2
-										print(str(penize_za_kolo) + " peněz za kolo")
-									
+										if language == "en":
+											print(str(penize_za_kolo) + " money per round")
+										elif language == "cz":
+											print(str(penize_za_kolo) + " peněz za kolo")
+										elif language == "de":
+											print(str(penize_za_kolo) + " peněz za kolo")
 									else:
 										if language == "en":
 											print("YOU DON'T HAVE ENOUGH MONEY!!\n")
@@ -707,7 +724,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 						print("Falsche Eingabe!\n")
 		elif game == "L":
 			if language == "en":
-				print("Leaderboards")
+				print("Leaderboards:")
 			try:
 				leaderboards_easy = {}
 				leaderboards_normal = {}
