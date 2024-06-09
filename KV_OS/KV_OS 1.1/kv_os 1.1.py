@@ -12,7 +12,7 @@ def convert_time(endtime):
 	endtime_hrs = endtime // 3600
 	endtime_mins = endtime % 3600 // 60
 	endtime_secs = endtime - endtime_hrs * 3600 - endtime_mins * 60
-	endtime_str = f"{endtime_hrs}h {endtime_mins}min {endtime_secs}s"
+	endtime_str = f"{endtime_hrs}h {endtime_mins:02d}min {endtime_secs:02d}s"
 	return endtime_str
 
 def load_key():
@@ -94,7 +94,7 @@ EASY difficulty
 - You start with 3 mld. money
 - You start with 2000 soldiers
 - Until you don't invest, you get 2 mld. money per round
-- If you want to win, you have to have 28 areas
+- If you want to win, you have to have 30 areas
 - You can invest to 10 money per round
 - Invensions come each 10 rounds to your country
 - Invasions are always per 1000 soldiers
@@ -105,7 +105,7 @@ EASY obtížnost
 - Začínáte s 3 mld. penězi
 - Začínáte s 2000 vojáky
 - Dokud neinvestujete, získáváte 2 mld. peněz za kolo
-- Chcete-li vyhrát, musíte získat 28 území
+- Chcete-li vyhrát, musíte získat 30 území
 - Investovat můžete do 10 peněz za kolo
 - Invaze do vaší země se konají každých 10 kol
 - Invaze jsou vždy po 1000 vojácích
@@ -116,7 +116,7 @@ EINFACHE Schwierigkeit
 - Sie beginnen mit 3 mld. Geld
 - Sie beginnen mit 2000 Soldaten
 - Bis Sie nicht investieren, erhalten Sie 2 mld. Geld pro Runde
-- Wenn du gewinnen willst, musst du 28 Gebiete haben
+- Wenn du gewinnen willst, musst du 30 Gebiete haben
 - Sie können bis zu 10 Geld pro Runde investieren
 - Erfindungen kommen alle 10 Runden in dein Land
 - Invasionen sind immer pro 1000 Soldaten
@@ -129,7 +129,7 @@ NORMAL difficulty
 - You start with 3 mld. money
 - You don't start with any soldiers
 - Until you don't invest, you get 2 mld. money per round
-- If you want to win, you have to have 59 areas
+- If you want to win, you have to have 57 areas
 - You can invest to 5 money per round
 - Invasions come each 5 rounds to your country
 - Invasions are always per 1000 soldiers
@@ -140,7 +140,7 @@ NORMAL obtížnost
 - Začínáte s 3 mld. penězi
 - Nezačínáte s žádnými vojáky
 - Dokud neinvestujete, získáváte 2 mld. peněz za kolo
-- Chcete-li vyhrát, musíte získat 59 území
+- Chcete-li vyhrát, musíte získat 57 území
 - Investovat můžete do 5 peněz za kolo
 - Invaze do vaší země se konají každých 5 kol
 - Invaze jsou vždy po 1000 vojácích
@@ -151,7 +151,7 @@ NORMALE Schwierigkeit
 - Sie beginnen mit 3 mld. Geld
 - Du fängst nicht mit irgendwelchen Soldaten an
 - Bis Sie nicht investieren, erhalten Sie 2 mld. Geld pro Runde
-- Wenn du gewinnen willst, musst du 59 Gebiete haben
+- Wenn du gewinnen willst, musst du 57 Gebiete haben
 - Sie können bis zu 5 Geld pro Runde investieren
 - Invasionen kommen alle 5 Runden in dein Land
 - Invasionen sind immer pro 1000 Soldaten
@@ -233,9 +233,9 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 						vojaci = 0
 					kola = 1
 					if obtiznost == "E":
-						obsadit = 28
+						obsadit = 30
 					elif obtiznost == "N":
-						obsadit = 59
+						obsadit = 57
 					elif obtiznost == "H":
 						obsadit = 70
 					banka = 0
@@ -981,7 +981,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 		elif game == "LI":
 			# Otevřít links_beta.py
 			try:
-				exec(open("links_beta.py", encoding="utf-8").read()	)
+				exec(open("links_beta.py", encoding="utf-8").read())
 			except FileNotFoundError:
 				print(f"{Fore.LIGHTRED_EX}Soubor \"{Fore.RED}links_beta.py{Fore.LIGHTRED_EX}\" nebyl nalezen.\nStáhněte si ho přes KV stránky (sekce KV Linky) a vložte ho do složky KV_OS 1.1.{Fore.RESET}")
 	elif home == "P":
