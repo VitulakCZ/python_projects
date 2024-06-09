@@ -59,11 +59,11 @@ while True:
 	os.system(clear)
 	if home == "G":
 		if language == "en":
-			game = input("__________________\n       Game\n__________________\nprocesing...\npress S = Singleplayer\n      M = Multiplayer\n      L = Load the game\nL = Leaderboards: ").upper()
+			game = input("__________________\n       Game\n__________________\nprocesing...\npress S = Singleplayer\n      M = Multiplayer\n      LI = Load a game\nL = Leaderboards: ").upper()
 		elif language == "cz":
-			game = input("__________________\n        Hra\n__________________\nnačítání...\nstiskněte S = Singleplayer\n          M = Multiplayer      L = Načíst hru\nL = Žebříčky: ").upper()
+			game = input("__________________\n        Hra\n__________________\nnačítání...\nstiskněte S = Singleplayer\n          M = Multiplayer\n          LI = Načíst hru\nL = Žebříčky: ").upper()
 		elif language == "de":
-			game = input("_________________\n      Spiel\n_________________\nWird geladen...\ndrücke S = Singleplayer\n       M = Multiplayer       L = Laden Sie das Spiel\nL = Bestenlisten: ").upper()
+			game = input("_________________\n      Spiel\n_________________\nWird geladen...\ndrücke S = Singleplayer\n       M = Multiplayer\n       LI = Laden Sie ein Spiel\nL = Bestenlisten: ").upper()
 		os.system(clear)
 		if game == "S":
 			obtiznost = None
@@ -489,7 +489,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 								voj = input("Sie haben " + str(vojaci) + " Soldaten, " + str(penize) + " Geld, Preis für 1000 Soldaten ist 1 mld, für 2000 Soldaten 2 mld, für 3000 Soldaten 3 mld usw... Wie viele möchten Sie kaufen? ")
 							try:
 								voj = int(voj)
-								if voj % 1000 == 0:
+								if voj % 1000 == 0 and voj > 0:
 									if penize >= voj // 1000:
 										penize -= voj // 1000
 										vojaci += voj
@@ -770,19 +770,21 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 				print("NEE!")
 		elif game == "M":
 			if language == "en":
-				print(f"{Fore.YELLOW}WARNING: This is the multiplayer game, that insn't translated!\nBe sure, you know, what are you doing, or learn czech!{Fore.RESET}")
+				print(f"{Fore.YELLOW}WARNING: This is the multiplayer game, that isn't translated!\nBe sure, you know, what are you doing, or learn czech!{Fore.RESET}")
 			elif language == "de":
 				print(f"{Fore.YELLOW}WARNUNG: Dies ist das Multiplayer-Spiel, das nicht übersetzt ist!\nSeien Sie sicher, Sie wissen, was Sie tun, oder lernen Sie Tschechisch!{Fore.RESET}")
 			while True:
 				player1 = input("Zadejte jméno hráče 1: ")
-				if player1 == "" or " " in player1:
-					print(f"{Fore.RED}Musíte zadat jméno, ve jméně nesmí být mezera!{Fore.RESET}")
+				if player1 == "" or " " in player1 or len(player1) > 50:
+					print(f"{Fore.RED}Musíte zadat jméno, ve jméně nesmí být mezera a jméno nesmí obsahovat více než 50 písmen!{Fore.RESET}")
 				else:
 					break
 			while True:
 				player2 = input("Zadejte jméno hráče 2: ")
-				if player2 == "" or " " in player2:
-					print(f"{Fore.RED}Musíte zadat jméno, ve jméně nesmí být mezera!{Fore.RESET}")
+				if player2 == "" or " " in player2 or len(player2) > 50:
+					print(f"{Fore.RED}Musíte zadat jméno, ve jméně nesmí být mezera a jméno nesmí obsahovat více než 50 písmen!{Fore.RESET}")
+				elif player2 == player1:
+					print(f"{Fore.RED}Jména se nesmí rovnat!{Fore.RESET}")
 				else:
 					break
 			mixer.music.load("kv_war_simulator_soundtrack.wav")
@@ -821,7 +823,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 					koupit = input("Kolik vojáků chceš koupit? 1000 vojáků stojí 1 peníz, Kupuj po 1000: ")
 					try:
 						koupit = int(koupit)
-						if koupit % 1000 == 0:
+						if koupit % 1000 == 0 and koupit > 0:
 							if na_rade == 1 and penize1 >= koupit // 1000:
 								penize1 -= koupit // 1000
 								vojaci1 += koupit
@@ -874,7 +876,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 									print(f"S hráčem {Fore.RED}{player2}{Fore.RESET} dopadla bitva {Fore.YELLOW}remízou{Fore.RESET}!")
 									utocil = True
 									break
-								
+
 							elif na_rade == 1 and pocet_do_utoku > vojaci1:
 								print(f"Tolik vojáků nemáš!")
 							elif na_rade == 2 and pocet_do_utoku <= vojaci2:
@@ -885,7 +887,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 									uzemi1 -= 1
 									uzemi2 += 1
 									vojaci1 = 0
-									
+
 									print(f"Porazil jsi armádu hráče {Fore.RED}{player1}{Fore.RESET}, vrátilo se ti {Fore.YELLOW}{zbytky}{Fore.RESET} vojáků!")
 									utocil = True
 									break
@@ -976,7 +978,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 					break
 				else:
 					print("Špatné zadání!\n")
-		elif game == "L":
+		elif game == "LI":
 			# Otevřít links_beta.py
 			try:
 				exec(open("links_beta.py", encoding="utf-8").read()	)
