@@ -33,6 +33,7 @@ class Pepa():
 		self.koupeno = []
 		self.vlastnene_itemy = []
 		self.damage = 0
+		self.resistance = 0
 
 	def __repr__(self):
 		return f"Pepo, máš {Fore.RED}{self.zivoty} životů{Fore.RESET} a {Fore.LIGHTMAGENTA_EX}{self.penize} peněz{Fore.RESET}. Máš {Fore.LIGHTBLUE_EX}level {self.level}{Fore.BLUE} ({self.xp} / {50 * int(self.level)} XP){Fore.RESET}\nChceš se vydat na výpravu? A = Ano, S = Shop, C = Character: "
@@ -40,7 +41,7 @@ class Pepa():
 	def vyprava(self):
 		nepritel = Nepritel(random.randint(self.stats[0], self.stats[1]))
 		# print(int(round(nepritel.return_damage() - self.damage / 100, 0)))
-		self.ztraceno_zivotu = 0 if (x := int(round(nepritel.return_damage() - self.damage / 100, 0))) < 0 else x
+		self.ztraceno_zivotu = 0 if (x := int(round(nepritel.return_damage() - self.damage / 100 + (pepa.level*10*self.resistance//2 / (self.resistance+5)), 0) - 10)) < 0 else x
 		self.ziskano_penez = random.randint(15, 30)
 		self.ziskano_xp = int(round(random.randint(10, 25) * self.xp_multiplier, 0))
 		self.drops = nepritel.generate_drops()
@@ -194,6 +195,13 @@ class HealthUpgrade(Drop):
 		super().__init__(nazev, zkratka, cena, barva, f"+{self.add_health} životů")
 		pepa.max_zivoty += self.add_health
 
+class ResistanceUpgrade(Drop):
+	def __init__(self, nazev, zkratka, cena, barva):
+		self.add_damage = random.randint(250 * (pepa.level // 3), 250 * (pepa.level // 2))
+		super().__init__(nazev, zkratka, cena, barva, f"+{self.add_damage//10} odolnost")
+		pepa.damage += self.add_damage//10*10
+		pepa.resistance += self.add_damage//10
+
 # Inicializace itemů
 lifePotion = LifePotion("Life potion", "L", 25, None, Fore.LIGHTRED_EX, 1, [], 100)
 drevenyMec = Mec("Dřevěný meč", "DM", 150, 1, Fore.LIGHTBLACK_EX, 3, [], 15)
@@ -204,8 +212,10 @@ xpMultiplier = XPMultiplier("XP Multiplier", "XP", 500, 5, Fore.BLUE, 8, ["Dřev
 itemy = [lifePotion, drevenyMec, drevenyStit, bronzovyMec, bronzovyStit, xpMultiplier]
 dropy = [
 	{"DamageUpgrade": ["Damage upgrade", "DUP", 100, "Fore.CYAN"]},
-	{"HealthUpgrade": ["Health upgrade", "HUP", 100, "Fore.LIGHTRED_EX"]}
-
+	{"HealthUpgrade": ["Health upgrade", "HUP", 100, "Fore.LIGHTRED_EX"]},
+	{"HealthUpgrade": ["Health upgrade", "HUP", 100, "Fore.LIGHTRED_EX"]},
+	{"ResistanceUpgrade": ["Resistance upgrade", "RUP", 100, "Fore.BLUE"]},
+	{"ResistanceUpgrade": ["Resistance upgrade", "RUP", 100, "Fore.BLUE"]}
 ]
 
 # Nepřátelé
