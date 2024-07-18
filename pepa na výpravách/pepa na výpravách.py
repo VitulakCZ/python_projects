@@ -1,6 +1,6 @@
 import random
 import time
-from colorama import init, Fore, Back
+from colorama import init, Fore, Back, Style
 from pygame import mixer
 
 init()
@@ -26,22 +26,26 @@ class Pepa():
 		self.penize = penize
 		self.zivoty = zivoty
 		self.max_zivoty = zivoty
+		self.limit_zivoty = 350
 		self.xp = xp
 		self.level = 1
-		self.stats = [20, 50]
+		self.stats = [30, 50]
 		self.xp_multiplier = 1
 		self.koupeno = []
 		self.vlastnene_itemy = []
 		self.damage = 0
+		self.max_damage = 1000
 		self.resistance = 0
+		self.max_resistance = 150
 
 	def __repr__(self):
 		return f"Pepo, máš {Fore.RED}{self.zivoty} životů{Fore.RESET} a {Fore.LIGHTMAGENTA_EX}{self.penize} peněz{Fore.RESET}. Máš {Fore.LIGHTBLUE_EX}level {self.level}{Fore.BLUE} ({self.xp} / {50 * int(self.level)} XP){Fore.RESET}\nChceš se vydat na výpravu? A = Ano, S = Shop, C = Character: "
 
 	def vyprava(self):
 		nepritel = Nepritel(random.randint(self.stats[0], self.stats[1]))
-		# print(int(round(nepritel.return_damage() - self.damage / 100, 0)))
-		self.ztraceno_zivotu = 0 if (x := int(round(nepritel.return_damage() - self.damage / 100 + (pepa.level*10*self.resistance//2 / (self.resistance+5)), 0) - 10)) < 0 else x
+		
+		
+		self.ztraceno_zivotu = 0 if (x := (int(round(nepritel.return_damage() - self.damage / 100 - self.resistance/(10+pepa.level), 0)))) < 0 else x
 		self.ziskano_penez = random.randint(15, 30)
 		self.ziskano_xp = int(round(random.randint(10, 25) * self.xp_multiplier, 0))
 		self.drops = nepritel.generate_drops()
@@ -188,25 +192,27 @@ class DamageUpgrade(Drop):
 		self.add_damage = random.randint(200 * (pepa.level // 3), 200 * (pepa.level // 2))
 		super().__init__(nazev, zkratka, cena, barva, f"+{self.add_damage} damage")
 		pepa.damage += self.add_damage
+		pepa.damage = pepa.damage if pepa.damage <= pepa.max_damage else pepa.max_damage
 
 class HealthUpgrade(Drop):
 	def __init__(self, nazev, zkratka, cena, barva):
 		self.add_health = random.randint(10 * (pepa.level // 3), 10 * (pepa.level // 2))
 		super().__init__(nazev, zkratka, cena, barva, f"+{self.add_health} životů")
 		pepa.max_zivoty += self.add_health
+		pepa.max_zivoty = pepa.max_zivoty if pepa.max_zivoty <= pepa.limit_zivoty else pepa.limit_zivoty
 
 class ResistanceUpgrade(Drop):
 	def __init__(self, nazev, zkratka, cena, barva):
 		self.add_damage = random.randint(250 * (pepa.level // 3), 250 * (pepa.level // 2))
 		super().__init__(nazev, zkratka, cena, barva, f"+{self.add_damage//10} odolnost")
-		pepa.damage += self.add_damage//10*10
 		pepa.resistance += self.add_damage//10
+		pepa.resistance = pepa.resistance if pepa.resistance <= pepa.max_resistance else pepa.max_resistance
 
 # Inicializace itemů
 lifePotion = LifePotion("Life potion", "L", 25, None, Fore.LIGHTRED_EX, 1, [], 100)
-drevenyMec = Mec("Dřevěný meč", "DM", 150, 1, Fore.LIGHTBLACK_EX, 3, [], 15)
+drevenyMec = Mec("Dřevěný meč", "DM", 150, 1, Fore.LIGHTBLACK_EX, 3, [], 25)
 drevenyStit = Stit("Dřevěný štít", "DŠ", 200, 1, Fore.LIGHTBLACK_EX, 3, [], 40)
-bronzovyMec = Mec("Bronzový meč", "BM", 350, 1, Fore.YELLOW, 7, ["Dřevěný meč"], 10)
+bronzovyMec = Mec("Bronzový meč", "BM", 350, 1, Fore.YELLOW, 7, ["Dřevěný meč"], 20)
 bronzovyStit = Stit("Bronzový štít", "BŠ", 400, 1, Fore.YELLOW, 7, ["Dřevěný štít"], 30)
 xpMultiplier = XPMultiplier("XP Multiplier", "XP", 500, 5, Fore.BLUE, 8, ["Dřevěný meč", "Dřevěný štít"])
 itemy = [lifePotion, drevenyMec, drevenyStit, bronzovyMec, bronzovyStit, xpMultiplier]
@@ -237,7 +243,6 @@ class Nepritel():
 			if x > 0:
 				if x / 10 >= per - x / 5:
 					drop = random.choice(dropy)
-					print(drop)
 					drop_c = str(list(drop.keys())[0])
 					exec(f"drops.append({drop_c}(\"{drop.get(drop_c)[0]}\", \"{drop.get(drop_c)[1]}\", {drop.get(drop_c)[2]}, {drop.get(drop_c)[3]}))")
 			y -= 1
@@ -298,13 +303,12 @@ while True:
 		vyber = input().upper()
 		print(kupovani(vyber))
 	elif rozhodnuti == "C":
-		if len(pepa.koupeno) == 0 and len(pepa.vlastnene_itemy) == 0:
-			continue
 		print(f"{Fore.MAGENTA}Vlastněné itemy:{Fore.RESET}")
 		for vlastneny_item in pepa.vlastnene_itemy:
 			if ">" not in str(vlastneny_item):
 				print(f"{vlastneny_item.barva}{vlastneny_item.zkratka} = {vlastneny_item.nazev} => " + ("Menší šance na větší útok nepřátel" if "meč" in vlastneny_item.nazev else "Snížení limitu damage nepřátel") + f"{Fore.RESET}")
 			else:
 				print(str(vlastneny_item) + Fore.RESET)
+		print(f"{Style.BRIGHT}DUP:{Style.RESET_ALL} {pepa.damage}/{pepa.max_damage}\t{Style.BRIGHT}HUP:{Style.RESET_ALL} {pepa.max_zivoty}/{pepa.limit_zivoty}\t{Style.BRIGHT}RUP:{Style.RESET_ALL} {pepa.resistance}/{pepa.max_resistance}")
 	else:
 		print("What?\n")
