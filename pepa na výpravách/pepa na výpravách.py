@@ -234,6 +234,7 @@ class Nepritel():
 
 	def generate_drops(self):
 		# čím větší level, tím více dropů!
+        # NEMĚNIT
 		x = pepa.level // 3
 		y = x
 		drops = []
