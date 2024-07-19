@@ -1,15 +1,17 @@
 import random
 import time
+import os
 from colorama import init, Fore, Back, Style
 from pygame import mixer
 
 init()
 mixer.init()
+clear = "cls" if os.name == "nt" else "clear"
 mixer.music.load("hudba do pozadí.mp3")
 mixer.music.play(-1)
 
 # Intro
-'''
+os.system(clear)
 time.sleep(0.8)
 print("KV uvádí...")
 time.sleep(1.2)
@@ -19,7 +21,7 @@ print(f"{Fore.LIGHTBLACK_EX}Speciální poděkování firmě {Fore.RED}Rare{Fore
 time.sleep(1.6)
 print(f"{Fore.LIGHTBLACK_EX}© 2021 - 2022 VŠECHNA PRÁVA VYHRAZENA!{Fore.RESET}")
 time.sleep(4.9)
-'''
+
 # Pepa
 class Pepa():
 	def __init__(self, penize, zivoty, xp):
@@ -43,8 +45,6 @@ class Pepa():
 
 	def vyprava(self):
 		nepritel = Nepritel(random.randint(self.stats[0], self.stats[1]))
-		
-		
 		self.ztraceno_zivotu = 0 if (x := (int(round(nepritel.return_damage() - self.damage / 100 - self.resistance/(10+pepa.level), 0)))) < 0 else x
 		self.ziskano_penez = random.randint(15, 30)
 		self.ziskano_xp = int(round(random.randint(10, 25) * self.xp_multiplier, 0))
