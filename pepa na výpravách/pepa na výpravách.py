@@ -1,4 +1,5 @@
 import random
+import math
 import time
 import os
 from colorama import init, Fore, Back, Style
@@ -11,6 +12,7 @@ mixer.music.load("hudba do pozadí.mp3")
 mixer.music.play(-1)
 
 # Intro
+'''
 os.system(clear)
 time.sleep(0.8)
 print("KV uvádí...")
@@ -21,16 +23,16 @@ print(f"{Fore.LIGHTBLACK_EX}Speciální poděkování firmě {Fore.RED}Rare{Fore
 time.sleep(1.6)
 print(f"{Fore.LIGHTBLACK_EX}© 2021 - 2022 VŠECHNA PRÁVA VYHRAZENA!{Fore.RESET}")
 time.sleep(4.9)
-
+'''
 # Pepa
 class Pepa():
-	def __init__(self, penize, zivoty, xp):
+	def __init__(self, penize, zivoty, xp, level):
 		self.penize = penize
 		self.zivoty = zivoty
 		self.max_zivoty = zivoty
 		self.limit_zivoty = 350
 		self.xp = xp
-		self.level = 1
+		self.level = level
 		self.stats = [30, 50]
 		self.xp_multiplier = 1
 		self.koupeno = []
@@ -39,12 +41,15 @@ class Pepa():
 		self.max_damage = 1000
 		self.resistance = 0
 		self.max_resistance = 150
+		self.faze = 1
 
 	def __repr__(self):
 		return f"Pepo, máš {Fore.RED}{self.zivoty} životů{Fore.RESET} a {Fore.LIGHTMAGENTA_EX}{self.penize} peněz{Fore.RESET}. Máš {Fore.LIGHTBLUE_EX}level {self.level}{Fore.BLUE} ({self.xp} / {50 * int(self.level)} XP){Fore.RESET}\nChceš se vydat na výpravu? A = Ano, S = Shop, C = Character: "
 
 	def vyprava(self):
 		nepritel = Nepritel(random.randint(self.stats[0], self.stats[1]))
+		self.boss = nepritel.bossfight()
+		if (self.boss): return
 		self.ztraceno_zivotu = 0 if (x := (int(round(nepritel.return_damage() - self.damage / 100 - self.resistance/(10+pepa.level), 0)))) < 0 else x
 		self.ziskano_penez = random.randint(15, 30)
 		self.ziskano_xp = int(round(random.randint(10, 25) * self.xp_multiplier, 0))
@@ -74,7 +79,7 @@ class Pepa():
 		print(f"{Fore.LIGHTBLUE_EX}Pepo, dostal jsi nový level! Jsi už na levelu " + str(self.level) + f"!{Fore.RESET}")
 
 # Pro debug dobrý...
-pepa = Pepa(0, 100, 0)
+pepa = Pepa(0, 100, 0, 1)
 
 class Item():
 	def __init__(self, nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
@@ -248,6 +253,66 @@ class Nepritel():
 					exec(f"drops.append({drop_c}(\"{drop.get(drop_c)[0]}\", \"{drop.get(drop_c)[1]}\", {drop.get(drop_c)[2]}, {drop.get(drop_c)[3]}))")
 			y -= 1
 		return drops
+	def bossfight(self):
+		boss = None
+		# Agent
+		if pepa.level >= 6 and pepa.faze == 1:
+			if pepa.level == 8:
+				x = 8
+			else:
+				x = random.randint(pepa.level - math.ceil(pepa.level/2), 8)
+				if x == 8:
+					boss = "Agent"
+
+		if boss is None:
+			return boss
+		# Agent bossfight
+		if boss == "Agent":
+			boss_health = 2000
+			boss_damage = [80, 120]
+		while True:
+			pepa_status = str(pepa)
+			print(pepa_status.split("\n")[0])
+			print(f"Napadl tě {Style.BRIGHT}{Fore.RED}{boss}!{Fore.RESET}{Style.RESET_ALL}")
+			bossfight_input = input("Co chceš dělat? A = Útok, L = Life potion (25 peněz), B = Bránit se: ").upper()
+			if bossfight_input == "A":
+				pepa_damage = 0 if (x := random.randint(pepa.damage - 200, pepa.damage + 200) // 5) < 0 else x
+				boss_health -= pepa_damage
+				print(f"Zaútočil jsi a dal jsi {Fore.LIGHTBLUE_EX}{pepa_damage} damage!{Fore.RESET}")
+				if boss_health <= 0:
+					print(f"Úspěšně jsi zabil bosse {pepa.faze}. fáze jménem {Style.BRIGHT}{Fore.RED}{boss}{Fore.RESET}{Style.RESET_ALL}, Pepo! Jsem na tebe hrdý!\nTímto smíš vstoupit do nové fáze.")
+					pepa.faze += 1
+					return 1
+			elif bossfight_input == "B":
+				pepa_damage = pepa.stats[0] if (x := pepa.resistance - random.randint(pepa.stats[0], pepa.stats[1])) < pepa.stats[0] else x
+				if (pepa.stats[0] <= 25):
+					pepa_damage += pepa.stats[0]
+				boss_health -= pepa_damage
+				print(f"Bránil ses úspěšně, boss si vzal sám sobě {Fore.LIGHTBLUE_EX}{pepa_damage} damage!{Fore.RESET}")
+				if boss_health <= 0:
+					print(f"Úspěšně jsi zabil bosse {Back.LIGHTGREEN_EX}{pepa.faze}. fáze{Back.RESET} jménem {Style.BRIGHT}{Fore.RED}{boss}{Fore.RESET}{Style.RESET_ALL}, Pepo! Jsem na tebe hrdý!\nTímto smíš vstoupit do nové fáze.")
+					pepa.faze += 1
+					return 1
+			if bossfight_input == "A" or bossfight_input == "B":
+				boss_damage_now = random.randint(boss_damage[0], boss_damage[1]) - pepa.resistance // pepa.level
+				boss_damage_now = boss_damage_now if bossfight_input == "A" else boss_damage_now - random.randint(30, 40)
+				pepa.zivoty -= boss_damage_now
+				print(f"{Fore.RED}{boss}{Fore.RESET} Ti dal {boss_damage_now} damage!")
+				if pepa.zivoty <= 0:
+					print(f"{Fore.LIGHTRED_EX}Bohužel, Pepa umřel na výpravě.{Fore.RESET}")
+					mixer.music.load("hudba když zemřeš.mp3")
+					mixer.music.play()
+					time.sleep(10)
+					exit(0)
+			elif bossfight_input == "L":
+				if (pepa.penize >= 25):
+					print(f"{Fore.GREEN}Úspěšně zakoupen life potion, Pepo!")
+					pepa.penize -= 25
+					pepa.zivoty = pepa.max_zivoty if pepa.max_zivoty - pepa.zivoty <= 100 else pepa.zivoty + 100
+				else:
+					print(f"{Fore.RED}Error: Nemáš doatatek peněz, Pepo!{Fore.RESET}")
+			else:
+				print("WHAT?\n")
 
 def kupovani(vec):
 	match vec:
@@ -292,12 +357,13 @@ while True:
 			mixer.music.play()
 			time.sleep(10)
 
-		drop_str = ""
-		for drop in pepa.return_drops():
-			drop_str += f"Padlo ti: {Back.BLUE}{drop.nazev}{Back.RESET}\n"
+		if (not pepa.boss):
+			drop_str = ""
+			for drop in pepa.return_drops():
+				drop_str += f"Padlo ti: {Back.BLUE}{drop.nazev}{Back.RESET}\n"
 
-		print(f"{Fore.LIGHTCYAN_EX}Pepo, to bylo ofous! Ztratil jsi {Fore.RED}{pepa.zivotu_ztraceno()} životů{Fore.RESET}{Fore.LIGHTCYAN_EX} a získal jsi {Fore.LIGHTMAGENTA_EX}{pepa.penez_ziskano()} peněz{Fore.RESET}{Fore.LIGHTCYAN_EX}.\nDostal jsi {Fore.BLUE}{pepa.xp_ziskano()} XP{Fore.RESET}{Fore.LIGHTCYAN_EX}!\n" + drop_str + f"{Fore.RESET}{Fore.LIGHTGREEN_EX}Stiskni COKOLI pro pokračování: {Fore.RESET}", end="")
-		input()
+			print(f"{Fore.LIGHTCYAN_EX}Pepo, to bylo ofous! Ztratil jsi {Fore.RED}{pepa.zivotu_ztraceno()} životů{Fore.RESET}{Fore.LIGHTCYAN_EX} a získal jsi {Fore.LIGHTMAGENTA_EX}{pepa.penez_ziskano()} peněz{Fore.RESET}{Fore.LIGHTCYAN_EX}.\nDostal jsi {Fore.BLUE}{pepa.xp_ziskano()} XP{Fore.RESET}{Fore.LIGHTCYAN_EX}!\n" + drop_str + f"{Fore.RESET}{Fore.LIGHTGREEN_EX}Stiskni COKOLI pro pokračování: {Fore.RESET}", end="")
+			input()
 	elif rozhodnuti == "S":
 		print(f"{Fore.MAGENTA}Co chceš koupit?{Fore.RESET}\n")
 		shop()
