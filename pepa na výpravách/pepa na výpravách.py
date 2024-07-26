@@ -12,7 +12,6 @@ mixer.music.load("hudba do pozadí.mp3")
 mixer.music.play(-1)
 
 # Intro
-'''
 os.system(clear)
 time.sleep(0.8)
 print("KV uvádí...")
@@ -23,7 +22,6 @@ print(f"{Fore.LIGHTBLACK_EX}Speciální poděkování firmě {Fore.RED}Rare{Fore
 time.sleep(1.6)
 print(f"{Fore.LIGHTBLACK_EX}© 2021 - 2022 VŠECHNA PRÁVA VYHRAZENA!{Fore.RESET}")
 time.sleep(4.9)
-'''
 # Pepa
 class Pepa():
 	def __init__(self, penize, zivoty, xp, level):
