@@ -1,7 +1,7 @@
 from pygame import mixer
 mixer.init()
 
-penize = 10000 + 10000
+penize = 10000
 kolo = 1
 penize_za_kolo = None
 elektrina = 0
