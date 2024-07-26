@@ -41,6 +41,9 @@ class Pepa():
 		self.max_damage = 1000
 		self.resistance = 0
 		self.max_resistance = 150
+		self.mana = 100
+		self.max_mana = 200
+		self.skilly = {"Bleed": ["Dřevěný meč", "Bosse propíchnete mečem, boss bude krvácet na tři kola", 50], "Stun": ["Dřevěný štít", "Na bosse můžete hodit štít, boss nebude moci dvě kola útočit", 20]}
 		self.faze = 1
 
 	def __repr__(self):
@@ -79,7 +82,7 @@ class Pepa():
 		print(f"{Fore.LIGHTBLUE_EX}Pepo, dostal jsi nový level! Jsi už na levelu " + str(self.level) + f"!{Fore.RESET}")
 
 # Pro debug dobrý...
-pepa = Pepa(0, 100, 0, 1)
+pepa = Pepa(150, 100, 0, 1)
 
 class Item():
 	def __init__(self, nazev, zkratka, cena, pocet_kusu, barva, potrebny_level, predchozi_itemy):
@@ -213,6 +216,13 @@ class ResistanceUpgrade(Drop):
 		pepa.resistance += self.add_damage//10
 		pepa.resistance = pepa.resistance if pepa.resistance <= pepa.max_resistance else pepa.max_resistance
 
+class ManaUpgrade(Drop):
+	def __init__(self, nazev, zkratka, cena, barva):
+		self.add_mana = random.randint(10 * (pepa.level // 3), 10 * (pepa.level // 2))
+		super().__init__(nazev, zkratka, cena, barva, f"+{self.add_mana} many")
+		pepa.mana += self.add_mana
+		pepa.mana = pepa.mana if pepa.mana <= pepa.max_mana else pepa.max_mana
+
 # Inicializace itemů
 lifePotion = LifePotion("Life potion", "L", 25, None, Fore.LIGHTRED_EX, 1, [], 100)
 drevenyMec = Mec("Dřevěný meč", "DM", 150, 1, Fore.LIGHTBLACK_EX, 3, [], 25)
@@ -226,7 +236,8 @@ dropy = [
 	{"HealthUpgrade": ["Health upgrade", "HUP", 100, "Fore.LIGHTRED_EX"]},
 	{"HealthUpgrade": ["Health upgrade", "HUP", 100, "Fore.LIGHTRED_EX"]},
 	{"ResistanceUpgrade": ["Resistance upgrade", "RUP", 100, "Fore.BLUE"]},
-	{"ResistanceUpgrade": ["Resistance upgrade", "RUP", 100, "Fore.BLUE"]}
+	{"ResistanceUpgrade": ["Resistance upgrade", "RUP", 100, "Fore.BLUE"]},
+	{"ManaUpgrade": ["Mana upgrade", "MUP", 100, "Fore.LIGHTBLUE_EX"]}
 ]
 
 # Nepřátelé
@@ -253,6 +264,19 @@ class Nepritel():
 					exec(f"drops.append({drop_c}(\"{drop.get(drop_c)[0]}\", \"{drop.get(drop_c)[1]}\", {drop.get(drop_c)[2]}, {drop.get(drop_c)[3]}))")
 			y -= 1
 		return drops
+
+	def konec_bossfight(self, boss, boss_health):
+		if boss_health <= 0:
+			print(f"Úspěšně jsi zabil bosse {pepa.faze}. fáze jménem {Style.BRIGHT}{Fore.RED}{boss}{Fore.RESET}{Style.RESET_ALL}, Pepo! Jsem na tebe hrdý.")
+			time.sleep(5)
+			print("Nyní se však musíš posunout dále vpřed.")
+			time.sleep(2)
+			print("Jsi nucen jít do další fáze Tvého života!")
+			pepa.faze += 1
+			time.sleep(3)
+			return 1
+		return 0
+
 	def bossfight(self):
 		boss = None
 		# Agent
@@ -268,35 +292,64 @@ class Nepritel():
 			return boss
 		# Agent bossfight
 		if boss == "Agent":
-			boss_health = 2000
+			boss_health = 2500
 			boss_damage = [80, 120]
+		mixer.music.load("Poem of Ecstasy Improved.mp3")
+		mixer.music.play(-1)
+		kolo_skills = []
 		while True:
 			pepa_status = str(pepa)
-			print(pepa_status.split("\n")[0])
+			print(pepa_status.split("\n")[0], end=f", {Fore.LIGHTCYAN_EX}{pepa.mana}/{pepa.max_mana} many{Fore.RESET}\n")
 			print(f"Napadl tě {Style.BRIGHT}{Fore.RED}{boss}!{Fore.RESET}{Style.RESET_ALL}")
-			bossfight_input = input("Co chceš dělat? A = Útok, L = Life potion (25 peněz), B = Bránit se: ").upper()
+			bossfight_input = input("Co chceš dělat? A = Útok, L = Life potion (25 peněz), B = Bránit se, S = Skilly: ").upper()
 			if bossfight_input == "A":
 				pepa_damage = 0 if (x := random.randint(pepa.damage - 200, pepa.damage + 200) // 5) < 0 else x
 				boss_health -= pepa_damage
 				print(f"Zaútočil jsi a dal jsi {Fore.LIGHTBLUE_EX}{pepa_damage} damage!{Fore.RESET}")
-				if boss_health <= 0:
-					print(f"Úspěšně jsi zabil bosse {pepa.faze}. fáze jménem {Style.BRIGHT}{Fore.RED}{boss}{Fore.RESET}{Style.RESET_ALL}, Pepo! Jsem na tebe hrdý!\nTímto smíš vstoupit do nové fáze.")
-					pepa.faze += 1
+				if self.konec_bossfight(boss, boss_health):
 					return 1
 			elif bossfight_input == "B":
 				pepa_damage = pepa.stats[0] if (x := pepa.resistance - random.randint(pepa.stats[0], pepa.stats[1])) < pepa.stats[0] else x
 				if (pepa.stats[0] <= 25):
 					pepa_damage += pepa.stats[0]
 				boss_health -= pepa_damage
-				print(f"Bránil ses úspěšně, boss si vzal sám sobě {Fore.LIGHTBLUE_EX}{pepa_damage} damage!{Fore.RESET}")
-				if boss_health <= 0:
-					print(f"Úspěšně jsi zabil bosse {Back.LIGHTGREEN_EX}{pepa.faze}. fáze{Back.RESET} jménem {Style.BRIGHT}{Fore.RED}{boss}{Fore.RESET}{Style.RESET_ALL}, Pepo! Jsem na tebe hrdý!\nTímto smíš vstoupit do nové fáze.")
-					pepa.faze += 1
+				print(f"Bránil ses úspěšně, {boss} si vzal sám sobě {Fore.LIGHTBLUE_EX}{pepa_damage} damage!{Fore.RESET}")
+				if self.konec_bossfight(boss, boss_health):
 					return 1
+			elif bossfight_input == "S":
+				print(f"{Fore.MAGENTA}Tvoje skilly:{Fore.RESET}")
+				for skill in pepa.skilly:
+					if pepa.skilly.get(skill)[0] in pepa.koupeno:
+						print(f"{Fore.GREEN}{skill}: Vyžadováno: {pepa.skilly.get(skill)[0]}, {pepa.skilly.get(skill)[1]}, {pepa.skilly.get(skill)[2]} mana{Fore.RESET}")
+					else:
+						print(f"{Fore.RED}{skill}: Vyžadováno: {pepa.skilly.get(skill)[0]}, {pepa.skilly.get(skill)[1]}, {pepa.skilly.get(skill)[2]} mana{Fore.RESET}")
+				skill = input("Jaký skill chcete použít? ").title()
+				if skill in pepa.skilly and pepa.skilly.get(skill)[0] in pepa.koupeno and pepa.mana >= pepa.skilly.get(skill)[2]:
+					if skill == "Bleed":
+						kolo_skills.append(skill)
+					kolo_skills.append(skill)
+					kolo_skills.append(skill)
+					pepa.mana -= pepa.skilly.get(skill)[2]
+					print(f"Toto kolo použijete {skill} skill!")
+				else:
+					print(f"{Fore.LIGHTRED_EX}Error: Skill neexistuje, nemáš potřebné vybavení nebo nemáš dostatek peněz, Pepo!{Fore.RESET}")
+
 			if bossfight_input == "A" or bossfight_input == "B":
-				boss_damage_now = random.randint(boss_damage[0], boss_damage[1]) - pepa.resistance // pepa.level
-				boss_damage_now = boss_damage_now if bossfight_input == "A" else boss_damage_now - random.randint(30, 40)
-				pepa.zivoty -= boss_damage_now
+				boss_damage_now = 0
+				if "Bleed" in kolo_skills:
+					bleed_damage = random.randint(1000 / pepa.stats[0], 70)
+					print(f"{Fore.RED}{boss}{Fore.RESET} krvácí. {Fore.LIGHTBLUE_EX}{bleed_damage} damage!{Fore.RESET}")
+					boss_health -= random.randint(1000 / pepa.stats[0], 70)
+					if self.konec_bossfight(boss, boss_health):
+						return 1
+					kolo_skills.remove("Bleed")
+				if "Stun" not in kolo_skills:
+					boss_damage_now = random.randint(boss_damage[0], boss_damage[1]) - pepa.resistance // pepa.level
+					boss_damage_now = boss_damage_now if bossfight_input == "A" else boss_damage_now - random.randint(5, 20)
+					pepa.zivoty -= boss_damage_now
+				else:
+					print(f"{Fore.GREEN}Štít zablokoval veškerý damage!{Fore.RESET}")
+					kolo_skills.remove("Stun")
 				print(f"{Fore.RED}{boss}{Fore.RESET} Ti dal {boss_damage_now} damage!")
 				if pepa.zivoty <= 0:
 					print(f"{Fore.LIGHTRED_EX}Bohužel, Pepa umřel na výpravě.{Fore.RESET}")
@@ -311,7 +364,7 @@ class Nepritel():
 					pepa.zivoty = pepa.max_zivoty if pepa.max_zivoty - pepa.zivoty <= 100 else pepa.zivoty + 100
 				else:
 					print(f"{Fore.RED}Error: Nemáš doatatek peněz, Pepo!{Fore.RESET}")
-			else:
+			elif bossfight_input != "S":
 				print("WHAT?\n")
 
 def kupovani(vec):
