@@ -342,7 +342,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 							if vojaci >= 1000 and obtiznost in ["E", "N"]:
 								vojaci -= 1000
 							elif vojaci >= 2000 and obtiznost == "H":
-								vojaci -= 2000						
+								vojaci -= 2000
 							else:
 								if language == "en":
 									print("They attacked you, you don't have enough soldiers to counterattack.\nGAME OVER")
