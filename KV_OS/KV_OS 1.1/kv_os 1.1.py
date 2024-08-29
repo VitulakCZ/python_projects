@@ -559,7 +559,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 								elif language == "de":
 									print("Falsche Eingabe!\n")
 						elif hra == 'B':
-							if banka <= 3:
+							if banka < 6:
 								if language == "en":
 									bank = input("How much do you want to borrow? 1, 2, 3 mld? ")
 								elif language == "cz":
@@ -568,7 +568,15 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 									bank = input("Wie viel möchten Sie leihen? 1, 2, 3 mld? ")
 								if bank == "1":
 									penize += 1
-									banka += 2
+									if banka + 2 > 6:
+										if language == "en":
+											print("You can't borrow that much!")
+										elif language == "cz":
+											print("Nemůžeš si tolik půjčit!")
+										elif language == "de":
+											print("So viel kann man sich nicht leihen!")
+									else:
+										banka += 2
 									if language == "en":
 										print("You debt is now at " + str(banka) + " mld.")
 									elif language == "cz":
@@ -577,7 +585,15 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 										print("Ihre Schuld ist jetzt bei " + str(banka) + " mld.")
 								elif bank == "2":
 									penize += 2
-									banka += 4
+									if banka + 4 > 6:
+										if language == "en":
+											print("You can't borrow that much!")
+										elif language == "cz":
+											print("Nemůžeš si tolik půjčit!")
+										elif language == "de":
+											print("So viel kann man sich nicht leihen!")
+									else:
+										banka += 4
 									if language == "en":
 										print("You debt is now at " + str(banka) + " mld.")
 									elif language == "cz":
@@ -586,7 +602,15 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 										print("Ihre Schuld ist jetzt bei " + str(banka) + " mld.")
 								elif bank == "3":
 									penize += 3
-									banka += 6
+									if banka + 6 > 6:
+										if language == "en":
+											print("You can't borrow that much!")
+										elif language == "cz":
+											print("Nemůžeš si tolik půjčit!")
+										elif language == "de":
+											print("So viel kann man sich nicht leihen!")
+									else:
+										banka += 6
 									if language == "en":
 										print("You debt is now at " + str(banka) + " mld.")
 									elif language == "cz":
