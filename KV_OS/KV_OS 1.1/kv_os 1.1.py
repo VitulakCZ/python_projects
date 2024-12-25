@@ -57,6 +57,59 @@ Fuck you!""")
 	else:
 		print(f"""\
 Fuck you with {command}!""")
+
+def kvscr():
+	promenne = {}
+	while True:
+		prg = input(">>> ")
+		if prg == "write()":
+			write = input(">>>> ")
+			print(write)
+		elif prg == "write(dfn)":
+			write_var = input(">>>> ")
+			if write_var in promenne:
+				print(promenne.get(write_var))
+			else:
+				print(f"{Fore.RED}This isn't a variable!{Fore.RESET}")
+		elif prg.startswith("write(\"") and prg.endswith("\")"):
+			novy_write = prg.split("write(\"", maxsplit=1)[1].split("\")")[0]
+			if "\"" in novy_write:
+				print(f"{Fore.RED}You can't have \" in your text!{Fore.RESET}")
+			else:
+				print(novy_write)
+		elif prg.startswith("write(") and not prg.startswith("write(\"") and prg.endswith(")") and not prg.endswith("\")"):
+			w_dfn = prg.split("write(", maxsplit=1)[1].split(")")[0]
+			if w_dfn in promenne:
+				print(promenne.get(w_dfn))
+			else:
+				print(f"{Fore.RED}This isn't a variable!{Fore.RESET}")
+		elif prg == "dfn()":
+			dfn = input(">>>> ")
+			dfn_jako = input("= ")
+			promenne[dfn] = dfn_jako
+		elif prg == "dfn(show)":
+			for promenna in promenne:
+				print(f"{promenna} = {promenne.get(promenna)}")
+		elif prg.startswith("dfn(") and prg.endswith(")") and " = " in prg and prg != "dfn()":
+			novy_dfn = prg.split("dfn(", maxsplit=1)[1].split(" = ", maxsplit=1)
+			promenne[novy_dfn[0]] = novy_dfn[1][:-1]
+		elif prg == "while true":
+			kolo = input(">>>> ")
+			ready = input("If you are ready, press B: ").upper()
+			if ready == "B":
+				while True:
+					print(kolo)
+			else:
+				print("Another key!")
+		elif prg == "cls" or prg == "clear":
+			os.system(clear)
+		elif prg == "exit" or prg == "exit()":
+			os.system(clear)
+			break
+		else:
+			print("Another key!")
+	return
+
 def convert_time(endtime):
 	endtime_hrs = endtime // 3600
 	endtime_mins = endtime % 3600 // 60
@@ -84,7 +137,7 @@ language = "en"
 pwd = os.getcwd()
 os.system(clear)
 while True:
-	print(f"{Fore.GREEN}KV system {VERSION}\n©1995 - 2022 ALL RIGHTS RESERVED!{Fore.RESET}\n")
+	print(f"{Fore.GREEN}KV system {VERSION}\n©1995 - 2022 - 2024 ALL RIGHTS RESERVED!{Fore.RESET}\n")
 	if user == None:
 		if language == "en":
 			print(f"{Fore.RED}YOU ARE NOT LOGGED IN!{Style.RESET_ALL}")
@@ -113,11 +166,11 @@ while True:
 	os.system(clear)
 	if home == "G":
 		if language == "en":
-			game = input("__________________\n       Game\n__________________\nprocesing...\npress S = Singleplayer\n      M = Multiplayer\n      LI = Load a game\nL = Leaderboards: ").upper()
+			game = input("__________________\n		 Game\n__________________\nprocesing...\npress S = Singleplayer\n	   M = Multiplayer\n	  LI = Load a game\nL = Leaderboards: ").upper()
 		elif language == "cz":
-			game = input("__________________\n        Hra\n__________________\nnačítání...\nstiskněte S = Singleplayer\n          M = Multiplayer\n          LI = Načíst hru\nL = Žebříčky: ").upper()
+			game = input("__________________\n		  Hra\n__________________\nnačítání...\nstiskněte S = Singleplayer\n		  M = Multiplayer\n			 LI = Načíst hru\nL = Žebříčky: ").upper()
 		elif language == "de":
-			game = input("_________________\n      Spiel\n_________________\nWird geladen...\ndrücke S = Singleplayer\n       M = Multiplayer\n       LI = Laden Sie ein Spiel\nL = Bestenlisten: ").upper()
+			game = input("_________________\n	   Spiel\n_________________\nWird geladen...\ndrücke S = Singleplayer\n		  M = Multiplayer\n		  LI = Laden Sie ein Spiel\nL = Bestenlisten: ").upper()
 		os.system(clear)
 		if game == "S":
 			obtiznost = None
@@ -1070,55 +1123,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 			else:
 				links()
 	elif home == "P":
-		promenne = {}
-		while True:
-			prg = input(">>> ")
-			if prg == "write()":
-				write = input(">>>> ")
-				print(write)
-			elif prg == "write(dfn)":
-				write_var = input(">>>> ")
-				if write_var in promenne:
-					print(promenne.get(write_var))
-				else:
-					print(f"{Fore.RED}This isn't a variable!{Fore.RESET}")
-			elif prg.startswith("write(\"") and prg.endswith("\")"):
-				novy_write = prg.split("write(\"", maxsplit=1)[1].split("\")")[0]
-				if "\"" in novy_write:
-					print(f"{Fore.RED}You can't have \" in your text!{Fore.RESET}")
-				else:
-					print(novy_write)
-			elif prg.startswith("write(") and not prg.startswith("write(\"") and prg.endswith(")") and not prg.endswith("\")"):
-				w_dfn = prg.split("write(", maxsplit=1)[1].split(")")[0]
-				if w_dfn in promenne:
-					print(promenne.get(w_dfn))
-				else:
-					print(f"{Fore.RED}This isn't a variable!{Fore.RESET}")
-			elif prg == "dfn()":
-				dfn = input(">>>> ")
-				dfn_jako = input("= ")
-				promenne[dfn] = dfn_jako
-			elif prg == "dfn(show)":
-				for promenna in promenne:
-					print(f"{promenna} = {promenne.get(promenna)}")
-			elif prg.startswith("dfn(") and prg.endswith(")") and " = " in prg and prg != "dfn()":
-				novy_dfn = prg.split("dfn(", maxsplit=1)[1].split(" = ", maxsplit=1)
-				promenne[novy_dfn[0]] = novy_dfn[1][:-1]
-			elif prg == "while true":
-				kolo = input(">>>> ")
-				ready = input("If you are ready, press B: ").upper()
-				if ready == "B":
-					while True:
-						print(kolo)
-				else:
-					print("Another key!")
-			elif prg == "cls" or prg == "clear":
-				os.system(clear)
-			elif prg == "exit" or prg == "exit()":
-				os.system(clear)
-				break
-			else:
-				print("Another key!")
+		kvscr()
 	elif home == "N":
 		if language == "en":
 			print(f"""\
@@ -1134,22 +1139,22 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 0.4 BETA UPDATE:
   • We fixed bug, where any incorrect input turn off the OS
   • You can finally use function dfn() for some reasons:
-    - You can write your variables with function write(dfn)
-    - You can write all your variables with function dfn(show)
+	- You can write your variables with function write(dfn)
+	- You can write all your variables with function dfn(show)
 0.5 BETA UPDATE:
   • Function write() has got a new update:
-    - write("Hello!") should write "Hello!" to the console
+	- write("Hello!") should write "Hello!" to the console
   • We remake the login system (data is in file data05.txt)
   • We aded an options menu:
-    - In the options menu you can change the language
+	- In the options menu you can change the language
 0.6 BETA UPDATE
   • We added a game for Czech
 0.7 BETA UPDATE:
   • We fixed some bugs in the game (textova_hra.py):
-    - 0 money bug in investing is now fixed
-    - Bank is now fixed
-    - If you die, you can see why
-    - If you exit the game, you will go to menu
+	- 0 money bug in investing is now fixed
+	- Bank is now fixed
+	- If you die, you can see why
+	- If you exit the game, you will go to menu
   • We rewrote the write("*") system
   • We added some {Style.BRIGHT}{Fore.YELLOW}colors{Style.RESET_ALL} to the OS
   • You can now use dfn(something = something) like that
@@ -1179,6 +1184,12 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
   • The system can now clear the behind text
   • We added clear function to the programming
   • We've re-written the logic of all the strings in the multiplayer
+1.1 UPDATE
+  • We added a system to load games (there were meant to be files that you could download from our site)
+  • We updated the game to match all the different versions of it (Different number of areas and the Bank fix)
+  • We added a leaderboard system for the game (sign in and choose Speedrun mode to begin competing)
+  • We now include KV++ as a part of the core system
+  • We made a new KV OS Shell in which you can browse your files, engage with KV++ etc. (more features coming very soon...)
 PRESS ANY KEY TO CONTINUE: """, end="")
 		elif language == "cz":
 			print(f"""\
@@ -1194,22 +1205,22 @@ PRESS ANY KEY TO CONTINUE: """, end="")
 0.4 BETA AKTUALIZACE:
   • Opravili jsme chybu, kdy každý špatný input vypnul OS
   • Konečně máte proč využít dfn() funkci:
-    - Můžete napsat proměnnou pomocí write(dfn)
-    - Můžete zobrazit všechny vaše proměnné pomocí dfn(show)
+	- Můžete napsat proměnnou pomocí write(dfn)
+	- Můžete zobrazit všechny vaše proměnné pomocí dfn(show)
 0.5 BETA AKTUALIZACE:
   • Funkce write() dostala novou aktualizaci:
-    - write("Ahoj!") by mělo napsat "Ahoj!" do konzole
+	- write("Ahoj!") by mělo napsat "Ahoj!" do konzole
   • Předělali jsme přihlašovací systém (data jsou ve složce data05.txt)
   • Přidali jsme options menu:
-    - Můžete si vybrat jazyk
+	- Můžete si vybrat jazyk
 0.6 BETA AKTUALIZACE:
   • Přidali jsme hru pro češtinu
 0.7 BETA AKTUALIZACE:
   • Opravili jsme nějaké chyby ve hře (textova_hra.py):
-    - 0 peněz chyba v investování byla opravena
-    - Banka byla opravena
-    - Když umřete, uvidíte proč
-    - Když opustíte hru, vrátíte se do menu
+	- 0 peněz chyba v investování byla opravena
+	- Banka byla opravena
+	- Když umřete, uvidíte proč
+	- Když opustíte hru, vrátíte se do menu
   • Předělali jsme write("*") systém
   • Přidali jsme {Style.BRIGHT}{Fore.YELLOW}barvy{Style.RESET_ALL} do OS
   • Už můžete napsat dfn(něco = něco) přesně takto
@@ -1239,6 +1250,12 @@ PRESS ANY KEY TO CONTINUE: """, end="")
   • Systém teď může mazat zbylý zadní text
   • Přidali jsme funkci pro mazání
   • Přepsali jsme logiku textu v Multiplayeru
+1.1 AKTUALIZACE
+  • Přidali jsme systém pro načítání her (měly to být soubory, které jste si mohli stáhnout z našich stránek)
+  • Aktualizovali jsme hru, aby odpovídala všem jejím různým verzím (jiný počet oblastí a oprava banky)
+  • Do hry jsme přidali systém žebříčků (přihlaste se a zvolte režim Speedrun, abyste začali soutěžit)
+  • Nyní zahrnujeme KV++ jako součást našeho systému
+  • Vytvořili jsme nový KV OS Shell, ve kterém můžete procházet své soubory, používat KV++ atd. (další funkce již brzy...)
 POKRAČUJTE STISKEM LIBOVOLNÉ KLÁVESY: """, end="")
 		elif language == "de":
 			print(f"""\
@@ -1254,22 +1271,22 @@ POKRAČUJTE STISKEM LIBOVOLNÉ KLÁVESY: """, end="")
 0.4 BETA-UPDATE:
    • Wir haben einen Fehler behoben, bei dem jede falsche Eingabe das Betriebssystem ausschaltet
    • Sie können endlich die Funktion dfn() aus einigen Gründen verwenden:
-     - Sie können Ihre Variablen mit der Funktion write(dfn) schreiben
-     - Sie können alle Ihre Variablen mit der Funktion dfn(show) schreiben
+	 - Sie können Ihre Variablen mit der Funktion write(dfn) schreiben
+	 - Sie können alle Ihre Variablen mit der Funktion dfn(show) schreiben
 0.5 BETA-UPDATE:
    • Funktion write() hat ein neues Update bekommen:
-     - write("Hallo!") sollte "Hallo!" schreiben. zur Konsole
+	 - write("Hallo!") sollte "Hallo!" schreiben. zur Konsole
    • Wir machen das Login-System neu (Daten sind in der Datei data05.txt)
    • Wir haben ein Optionsmenü hinzugefügt:
-     - Im Optionsmenü können Sie die Sprache ändern
+	 - Im Optionsmenü können Sie die Sprache ändern
 0.6 BETA-UPDATE:
   • Wir haben ein Spiel für Tschechisch hinzugefügt
 0.7 BETA-UPDATE:
   • Wir haben einige Fehler im Spiel behoben (textova_hra.py):
-    - 0 Geldfehler beim Investieren ist jetzt behoben
-    - Bank ist jetzt repariert
-    - Wenn du stirbst, kannst du sehen warum
-    - Wenn Sie das Spiel verlassen, gelangen Sie zum Menü
+	- 0 Geldfehler beim Investieren ist jetzt behoben
+	- Bank ist jetzt repariert
+	- Wenn du stirbst, kannst du sehen warum
+	- Wenn Sie das Spiel verlassen, gelangen Sie zum Menü
   • Wir haben das write("*")-System umgeschrieben
   • Wir haben einige {Style.BRIGHT}{Fore.YELLOW}Farben{Style.RESET_ALL} zum Betriebssystem hinzugefügt
   • Sie können dfn(etwas = etwas) jetzt so verwenden
@@ -1299,6 +1316,12 @@ POKRAČUJTE STISKEM LIBOVOLNÉ KLÁVESY: """, end="")
   • Das System kann nun den Hintertext löschen
   • Wir haben der Programmierung eine klare Funktion hinzugefügt
   • Wir haben alle Saiten im Multiplayer neu geschrieben
+1.1 UPDATE
+  • Wir haben ein System zum Laden von Spielen hinzugefügt (es sollten Dateien sein, die Sie von unserer Website herunterladen können).
+  • Das Spiel wurde aktualisiert, um allen verschiedenen Versionen zu entsprechen (unterschiedliche Anzahl von Bereichen und Bankfixierung).
+  • Wir haben dem Spiel ein Bestenlistensystem hinzugefügt (melden Sie sich an und wählen Sie den Speedrun-Modus, um mit dem Wettbewerb zu beginnen).
+  • Wir integrieren jetzt KV++ als Teil des Basissystems
+  • Wir haben eine neue KV OS-Shell erstellt, in der Sie Ihre Dateien durchsuchen, KV++ verwenden usw. können. (Weitere Funktionen folgen in Kürze ...)
 DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 		input()
 		os.system(clear)
@@ -1519,12 +1542,12 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 				args, pocet_args = shell_args(shell_spaces)
 				if pocet_args == 0:
 					for d in os.listdir():
-						print(d, end="  ")
+						print(d, end="	")
 					print()
 				elif pocet_args == 1:
 					try:
 						for d in os.listdir(args[0]):
-							print(d, end="  ")
+							print(d, end="	")
 						print()
 					except PermissionError:
 						print(f"{Fore.LIGHTRED_EX}You don't have permission to see this directory!{Fore.RESET}")
@@ -1532,7 +1555,9 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 						print(f"{Fore.LIGHTRED_EX}Directory not found!{Fore.RESET}")
 				else:
 					print("Another key!")
-			elif shell_spaces[0] == "cat":
+			elif shell_spaces[0] == "cat" or shell_spaces[0] == "see":
+				if shell_spaces[0] == "cat":
+					print(f"{Fore.YELLOW}Command \"cat\" is deprecated, use \"see\" instead.{Fore.RESET}")
 				args, pocet_args = shell_args(shell_spaces)
 				if pocet_args == 1:
 					try:
@@ -1542,5 +1567,9 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 						print(f"{Fore.LIGHTRED_EX}You don't have permission to see this directory!{Fore.RESET}")
 					except FileNotFoundError:
 						print(f"{Fore.LIGHTRED_EX}Directory not found!{Fore.RESET}")
+				else:
+					print("Another key!")
+			elif shell_spaces[0] == "kvscr":
+				kvscr()
 			else:
 				print("Another key!")
