@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import math
 from colorama import init, Fore, Style
@@ -6,8 +7,40 @@ from cryptography.fernet import Fernet
 from pygame import mixer
 mixer.init()
 init()
-clear = "clear" if os.name == "posix" else "cls"
+clear = "cls" if os.name == "nt" else "clear"
+VERSION = "1.1"
 
+def links(jmeno="links_beta.py"):
+	# Otevřít links_beta.py
+	try:
+		with open(jmeno, encoding="utf-8") as f:
+			exec(f.read())
+	except FileNotFoundError:
+		print(f"{Fore.LIGHTRED_EX}Soubor \"{Fore.RED}{jmeno}{Fore.LIGHTRED_EX}\" nebyl nalezen.\nVložte ho do složky KV_OS {VERSION}{Fore.RESET}")
+	except:
+		pass
+
+def shell_args(shell_spaces):
+	#print(shell_spaces)
+	args = []
+	pocet_args = 0
+	for i, space in enumerate(shell_spaces):
+		if i == 0:
+			continue
+		if space == "":
+			continue
+
+		args.append(space)
+		pocet_args += 1
+	return (args, pocet_args)
+
+def shell_help(command=None):
+	if command is None:
+		print("""\
+Fuck you!""")
+	else:
+		print(f"""\
+Fuck you with {command}!""")
 def convert_time(endtime):
 	endtime_hrs = endtime // 3600
 	endtime_mins = endtime % 3600 // 60
@@ -32,30 +65,35 @@ fer = Fernet(key)
 
 user = None
 language = "en"
+pwd = os.getcwd()
 os.system(clear)
 while True:
-	print(f"{Fore.GREEN}KV system 1.1\n©1995 - 2022 ALL RIGHTS RESERVED!{Fore.RESET}\n")
+	print(f"{Fore.GREEN}KV system {VERSION}\n©1995 - 2022 ALL RIGHTS RESERVED!{Fore.RESET}\n")
 	if user == None:
 		if language == "en":
 			print(f"{Fore.RED}YOU ARE NOT LOGGED IN!{Style.RESET_ALL}")
-			print(f"G = Game\nP = Programming in KV script beta\nN = Patch notes\n{Fore.CYAN}R = Register\nL = Login{Fore.RESET}\nO = Options\nE = Shutdown: ", end="")
+			print(f"G = Game\nP = Programming in KV script beta\nN = Patch notes\n{Fore.CYAN}R = Register\nL = Login{Fore.RESET}\nO = Options\nS = KV OS Shell\nE = Shutdown: ", end="")
 		elif language == "cz":
 			print(f"{Fore.RED}NEJSTE PŘIHLÁŠENI!{Style.RESET_ALL}")
-			print(f"G = Hra\nP = Programování v KV scriptu beta\nN = Novinky\n{Fore.CYAN}R = Registrovat se\nL = Přihlásit se{Fore.RESET}\nO = Nastavení\nE = Vypnout: ", end="")
+			print(f"G = Hra\nP = Programování v KV scriptu beta\nN = Novinky\n{Fore.CYAN}R = Registrovat se\nL = Přihlásit se{Fore.RESET}\nO = Nastavení\nS = KV OS Shell\nE = Vypnout: ", end="")
 		elif language == "de":
 			print(f"{Fore.RED}DU BIST NICHT EINGELOGGT!{Style.RESET_ALL}")
-			print(f"G = Spiel\nP = Programmierung in KV-Skript-Beta\nN = Patchnotizen\n{Fore.CYAN}R = Registrieren\nL = Anmelden {Fore.RESET}\nO = Optionen\nE = Herunterfahren: ", end="")
-		home = input().upper()
+			print(f"G = Spiel\nP = Programmierung in KV-Skript-Beta\nN = Patchnotizen\n{Fore.CYAN}R = Registrieren\nL = Anmelden {Fore.RESET}\nO = Optionen\nS = KV OS Shell\nE = Herunterfahren: ", end="")
+		try:
+			home = input().upper()
+		except ValueError:
+			print(f"\n{Fore.LIGHTRED_EX}The program has been shut down using the exit() statement!\n{Fore.RED}{Style.BRIGHT}KV OS Has Crashed.{Style.RESET_ALL}{Fore.RESET}")
+			exit()
 	else:
 		if language == "en":
 			print(f"{Style.BRIGHT}{Fore.YELLOW}You are now logged in as {user}!{Style.RESET_ALL}")
-			home = input("G = Game\nP = Programming in KV script beta\nN = Patch notes\nL = Logout\nO = Options\nE = Shutdown: ").upper()
+			home = input("G = Game\nP = Programming in KV script beta\nN = Patch notes\nL = Logout\nO = Options\nS = KV OS Shell\nE = Shutdown: ").upper()
 		elif language == "cz":
 			print(f"{Style.BRIGHT}{Fore.YELLOW}Jsi přihlášen jako {user}!{Style.RESET_ALL}")
-			home = input("G = Hra\nP = Programování v KV scriptu beta\nN = Novinky\nL = Odhlásit se\nO = Nastavení\nE = Vypnout: ").upper()
+			home = input("G = Hra\nP = Programování v KV scriptu beta\nN = Novinky\nL = Odhlásit se\nO = Nastavení\nS = KV OS Shell\nE = Vypnout: ").upper()
 		elif language == "de":
 			print(f"{Style.BRIGHT}{Fore.YELLOW}Sie sind jetzt angemeldet als {user}!{Style.RESET_ALL}")
-			home = input("G = Spiel\nP = Programmierung in KV-Skript-Beta\nN = Patchnotizen\nL = Abmelden\nO = Optionen\nE = Herunterfahren: ").upper()
+			home = input("G = Spiel\nP = Programmierung in KV-Skript-Beta\nN = Patchnotizen\nL = Abmelden\nO = Optionen\nS = KV OS Shell\nE = Herunterfahren: ").upper()
 	os.system(clear)
 	if home == "G":
 		if language == "en":
@@ -1003,11 +1041,18 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 				else:
 					print("Špatné zadání!\n")
 		elif game == "LI":
-			# Otevřít links_beta.py
-			try:
-				exec(open("links_beta.py", encoding="utf-8").read())
-			except FileNotFoundError:
-				print(f"{Fore.LIGHTRED_EX}Soubor \"{Fore.RED}links_beta.py{Fore.LIGHTRED_EX}\" nebyl nalezen.\nStáhněte si ho přes KV stránky (sekce KV Linky) a vložte ho do složky KV_OS 1.1.{Fore.RESET}")
+			print(f"{Style.BRIGHT}DEFAULT:{Style.RESET_ALL} links_beta.py")
+			if language == "en":
+				print("Name of file? ", end="")
+			elif language == "cz":
+				print("Název souboru? ", end="")
+			elif language == "de":
+				print("Name der Datei? ", end="")
+			li_string = input()
+			if li_string != "":
+				links(li_string)
+			else:
+				links()
 	elif home == "P":
 		promenne = {}
 		while True:
@@ -1385,3 +1430,91 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 				break
 	elif home == "A":
 		print("AAA")
+	elif home == "S":
+		os.system(clear)
+		print(f"Welcome to the KV OS Shell v0.1 (built for KV OS 1.1). ©2024 ALL RIGHTS RESERVED!")
+		print("Type 'help' for more information.")
+		while True:
+			anonymous = "Anonymous"
+			shell = input(f"[{anonymous if user is None else user}] ")
+			shell_spaces = shell.split(" ")
+			if shell_spaces[0] == "help":
+				args, pocet_args = shell_args(shell_spaces)
+				if pocet_args == 0:
+					# Help pro KV OS Shell
+					shell_help()
+				elif pocet_args == 1:
+					# Help pro command
+					shell_help(args[-1])
+				else:
+					print("Another key!")
+			elif shell_spaces[0] == "exit":
+				os.chdir(pwd)
+				break
+			elif shell_spaces[0] == "clear" or shell_spaces[0] == "cls":
+				args, pocet_args = shell_args(shell_spaces)
+				if pocet_args == 0:
+					os.system(clear)
+				else:
+					print("Another key!")
+			elif shell_spaces[0] == "kvpp" or shell_spaces[0] == "kv++":
+				args, pocet_args = shell_args(shell_spaces)
+				if pocet_args == 0:
+					os.chdir(pwd + "/KV-plus-plus")
+					sys.path.append(os.getcwd())
+					try:
+						with open("shell.py", "r") as f:
+							exec(f.read())
+					except FileNotFoundError:
+						if language == "en":
+							print(f"{Fore.LIGHTRED}KV++ not found. Make sure you have all the KV++ files in KV-plus-plus directory.{Fore.RESET}")
+						elif language == "cz":
+							print(f"{Fore.LIGHTRED}KV++ nebyl nalezen. Zkontrolujte, jestli máte všechny soubory ve složce KV-plus-plus.{Fore.RESET}")
+						elif language == "de":
+							print(f"{Fore.LIGHTRED}KV++ nicht gefunden. Stellen Sie sicher, dass sich alle KV++ Dateien im KV-plus-plus Verzeichnis befinden.{Fore.RESET}")
+					except:
+						print()
+						pass
+				else:
+					print("Another key!")
+			elif shell_spaces[0] == "pwd":
+				args, pocet_args = shell_args(shell_spaces)
+				if pocet_args == 0:
+					print(os.getcwd())
+				else:
+					print("Another key!")
+			elif shell_spaces[0] == "cd":
+				args, pocet_args = shell_args(shell_spaces)
+				if pocet_args == 0:
+					os.chdir(pwd)
+				elif pocet_args == 1:
+					try:
+						if args[0].startswith("/"):
+							os.chdir(args[0])
+						else:
+							os.chdir(os.getcwd() + "/" + args[0])
+					except PermissionError:
+						print(f"{Fore.LIGHTRED_EX}You don't have permission to open this directory!{Fore.RESET}")
+					except FileNotFoundError:
+						print(f"{Fore.LIGHTRED_EX}Directory not found!{Fore.RESET}")
+				else:
+					print("Another key!")
+			elif shell_spaces[0] == "ls":
+				args, pocet_args = shell_args(shell_spaces)
+				if pocet_args == 0:
+					for d in os.listdir():
+						print(d, end="  ")
+					print()
+				elif pocet_args == 1:
+					try:
+						for d in os.listdir(args[0]):
+							print(d, end="  ")
+						print()
+					except PermissionError:
+						print(f"{Fore.LIGHTRED_EX}You don't have permission to see this directory!{Fore.RESET}")
+					except FileNotFoundError:
+						print(f"{Fore.LIGHTRED_EX}Directory not found!{Fore.RESET}")
+				else:
+					print("Another key!")
+			else:
+				print("Another key!")

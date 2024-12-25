@@ -1,0 +1,287 @@
+dej err = tricelajednactyrijednapetdevetdvasestpettripetdevet
+dej obtiznost = 0
+
+# Globální proměnné (funkce je nemohou upravovat)
+dej penize = 3.0
+dej vojaci = 0
+dej kola = 1
+dej obsadit = 0
+dej banka = 0
+dej penize_za_kolo = 2
+
+neopakovatkod error()
+    zabijuteln("ERROR: Nesprávné zadání!")
+JEKONEC
+
+neopakovatkod koupitVojaky()
+    zabijute("Máš ")
+    zabijute(vojaci)
+    zabijute(" vojáků, peněz ")
+    zabijute(penize)
+    zabijute(", cena za 1000 vojáků je 1 mld. Kolik jich chceš koupit? ")
+
+    dej pocet = indianscammer("☭")
+    opravdu pocet == err | pocet < 0 HEIL
+        kvzvracim 1
+    JEKONEC
+
+    opravdu komunismus(pocet, 1000) != 0 HEIL
+        zabijuteln("Nezadal jsi číslo dělitelné 1000!")
+        kvzvracim -1
+    JEKONEC
+
+    opravdu penize < pocet / 1000 HEIL
+        zabijuteln("NEMÁŠ DOSTATEK FINANCÍ!")
+        kvzvracim -1
+    JEKONEC
+
+    zabijute("Nakoupeno ")
+    zabijute(pocet)
+    zabijuteln(" vojáků.")
+    zabijute("Celkem máš ")
+    zabijute(vojaci + pocet)
+    zabijute(" vojáků, zbývá ti ")
+    zabijute(penize - pocet / 1000)
+    zabijuteln(" peněz.")
+    kvzvracim pocet
+JEKONEC
+
+neopakovatkod valka()
+    zabijute("Musíš obsadit ještě ")
+    zabijute(obsadit)
+    zabijute(" území. Na jedno území potřebuješ 2000 vojáků, chceš zaútočit? A = Ano, N = Ne: ")
+
+    dej val = google(1)
+    opravdu val == 65 | val == 97 HEIL
+        opravdu vojaci < 2000 HEIL
+            zabijuteln("NEMÁŠ DOSTATEK VOJÁKŮ!")
+            kvzvracim -1
+        JEKONEC
+
+        zabijute("Zaútočil jsi! Zbývá ti ")
+        zabijute(vojaci - 2000)
+        zabijuteln(" vojáků.")
+        kvzvracim 0
+    opravdudva val == 78 | val == 110 HEIL
+        zabijuteln("NE!")
+        kvzvracim -1
+    opravdune
+        kvzvracim 1
+    JEKONEC
+JEKONEC
+
+neopakovatkod investovat(isEasy)
+    zabijuteln("Kolik chceš investovat?")
+    zabijuteln("6 (+1 peníz za kolo)")
+    zabijute("10 (+2 peníze za kolo): ")
+
+    dej investice = indianscammer("☭")
+    opravdu investice == err | (investice != 6 § investice != 10) HEIL
+        kvzvracim 1
+    JEKONEC
+
+    opravdu ((penize_za_kolo > 4 § investice == 6 | (penize_za_kolo > 3 § investice == 10)) § diamant isEasy) | ((penize_za_kolo > 9 § investice == 6) | (penize_za_kolo > 8 § investice == 10)) HEIL
+        zabijuteln("Už jsi investoval až moc peněz!")
+        kvzvracim -1
+    JEKONEC
+
+    opravdu penize < investice HEIL
+        zabijuteln("NEMÁŠ DOSTATEK FINANCÍ!")
+        kvzvracim -1
+    JEKONEC
+
+    kvzvracim investice
+JEKONEC
+
+neopakovatkod banka_fn()
+    opravdu banka >= 6 HEIL
+        zabijuteln("Už sis půjčil až moc peněz!")
+        kvzvracim -1
+    JEKONEC
+
+    zabijute("Kolik si chceš půjčit? 1, 2, 3 mld? ")
+    dej _banka = indianscammer("☭")
+    opravdu _banka == err | _banka < 1 | _banka > 3 HEIL
+        kvzvracim 1
+    JEKONEC
+
+    dej novy_dluh = _banka * 2
+    opravdu banka + _banka * 2 > 6 HEIL
+        zabijuteln("Nemůžeš si tolik půjčit!")
+        dej novy_dluh = _banka
+    opravdune
+        zabijute("Dluh v tento moment máš ")
+        zabijute(banka + novy_dluh)
+        zabijuteln(" mld.")
+        kvzvracim novy_dluh
+    JEKONEC
+JEKONEC
+
+kvtocka bezdiamantulip HEIL
+    zabijuteln("Na jakou chceš hrát obtížnost")
+    zabijuteln("E = Easy")
+    zabijuteln("N = Normal")
+    zabijute("H = Hard: ")
+    dej input = google(1)
+
+    opravdu input == err HEIL
+        error()
+        zabijuteln("")
+        kvjedvole
+    JEKONEC
+
+    opravdu input == 69 | input == 101 HEIL
+        dej obtiznost = 1
+        zabijuteln("EASY obtížnost")
+        zabijuteln("- Začínáte s 3 mld. penězi")
+        zabijuteln("- Začínáte s 2000 vojáky")
+        zabijuteln("- Dokud neinvestujete, získáváte 2 mld. peněz za kolo")
+        zabijuteln("- Chcete-li vyhrát, musíte získat 30 území")
+        zabijuteln("- Investovat můžete do 10 peněz za kolo")
+        zabijuteln("- Invaze do vaší země se konají každých 10 kol")
+        zabijuteln("- Invaze jsou vždy po 1000 vojácích")
+        nashledanou
+    JEKONEC
+    opravdu input == 78 | input == 110 HEIL
+        dej obtiznost = 2
+        zabijuteln("NORMAL obtížnost")
+        zabijuteln("- Začínáte s 3 mld. penězi")
+        zabijuteln("- Nezačínáte s žádnými vojáky")
+        zabijuteln("- Dokud neinvestujete, získáváte 2 mld. peněz za kolo")
+        zabijuteln("- Chcete-li vyhrát, musíte získat 57 území")
+        zabijuteln("- Investovat můžete do 5 peněz za kolo")
+        zabijuteln("- Invaze do vaší země se konají každých 5 kol")
+        zabijuteln("- Invaze jsou vždy po 1000 vojácích")
+        nashledanou
+    JEKONEC
+    opravdu input == 72 | input == 104 HEIL
+        dej obtiznost = 3
+        zabijuteln("HARD obtížnost")
+        zabijuteln("- Nezačínáte s žádnými penězi")
+        zabijuteln("- Nezačínáte s žádnými vojáky")
+        zabijuteln("- Dokud neinvestujete, získáváte 2 mld. peněz za kolo")
+        zabijuteln("- Chcete-li vyhrát, musíte získat 70 území")
+        zabijuteln("- Investovat můžete do 5 peněz za kolo")
+        zabijuteln("- Invaze do vaší země se konají každých 5 kol")
+        zabijuteln("- Invaze jsou vždy po 2000 vojácích")
+        nashledanou
+    JEKONEC
+    error()
+    zabijuteln("")
+JEKONEC
+
+zabijute("Stiskem ENTER pokračuj: ")
+google(0)
+zabijuteln("Toto je vylepšená verze hry textova_hra.py. Jestli chcete mít zážitek ze hry textova_hra, jako takový, stáhněte si KV OS BETA 0.6.")
+zabijuteln("")
+
+opravdu obtiznost == 1 HEIL
+    dej vojaci = 2000
+    dej obsadit = 30
+opravdudva obtiznost == 2 HEIL
+    dej obsadit = 57
+opravdune
+    dej penize = 0.0
+    dej obsadit = 70
+JEKONEC
+
+kvtocka bezdiamantulip HEIL
+    dej x = 0
+    zabijute(kola)
+    zabijuteln(". KOLO!")
+    zabijute("K = Koupit vojáky, V = Válka, I = Investovat, B = Banka, D = Další kolo, E = Exit: ")
+
+    dej vyber = google(1)
+    opravdu vyber == 75 | vyber == 107 HEIL
+        dej x = koupitVojaky()
+        opravdu x != -1 § x != 1 HEIL
+            dej penize = penize - x / 1000
+            dej vojaci = vojaci + x
+        JEKONEC
+    opravdudva vyber == 86 | vyber == 118 HEIL
+        dej x = valka()
+        opravdu x == 0 HEIL
+            dej vojaci = vojaci - 2000
+            dej obsadit = obsadit - 1
+        JEKONEC
+        opravdu obsadit == 0 HEIL
+            zabijuteln("")
+            zabijuteln("GRATULACE!!! Dohrál jsi hru!! Jsi dobrý!!")
+            zabijute("Stiskem ENTER pokračuj: ")
+            google(0)
+            zabijuteln("")
+            nashledanou
+        JEKONEC
+    opravdudva vyber == 73 | vyber == 105 HEIL
+        dej x = investovat(obtiznost == 1)
+        opravdu x != -1 § x != 1 HEIL
+            dej penize = penize - x
+            opravdu x == 6 HEIL
+                dej penize_za_kolo = penize_za_kolo + 1
+            opravdune
+                dej penize_za_kolo = penize_za_kolo + 2
+            JEKONEC
+        JEKONEC
+    opravdudva vyber == 66 | vyber == 98 HEIL
+        dej x = banka_fn()
+        opravdu x != -1 § x != 1 HEIL
+            dej banka = banka + x
+            dej penize = penize + x / 2
+        JEKONEC
+    opravdudva vyber == 68 | vyber == 100 HEIL
+        dej kola = kola + 1
+        opravdu kola == 50 HEIL
+            zabijuteln("Nestihl jsi dohrát hru pod 50 kol.")
+            zabijuteln("GAME OVER")
+            nashledanou
+        JEKONEC
+
+        dej penize = penize + penize_za_kolo
+        dej penize = penize - banka
+        dej banka = 0
+
+        dej kolikrat = 10
+        dej jake_kolo = kolikrat / 2
+        opravdu obtiznost == 1 HEIL
+            dej kolikrat = 5
+            dej jake_kolo = kolikrat * 2
+        JEKONEC
+
+        procpro kolo = 0 ~ kolikrat HEIL
+            opravdu kolo * jake_kolo != kola HEIL
+                kvjedvole
+            JEKONEC
+
+            opravdu vojaci < 1000 | (vojaci < 2000 § obtiznost == 3) HEIL
+                zabijuteln("Zaútočili na tebe, nemáš dostatek vojáků na protiútok.")
+                zabijuteln("GAME OVER")
+                dej x = -2
+                nashledanou
+            JEKONEC
+
+            opravdu obtiznost == 3 HEIL
+                dej vojaci = vojaci - 2000
+            opravdune
+                dej vojaci = vojaci - 1000
+            JEKONEC
+
+            zabijute("Zaútočili na tebe! Nově máš ")
+            zabijute(vojaci)
+            zabijuteln(" vojáků!")
+            dej kola = kola + 1
+            nashledanou
+        JEKONEC
+    opravdudva vyber == 69 | vyber == 101 HEIL
+        zabijuteln("Odešel jsi ze hry.")
+        nashledanou
+    opravdune
+        error()
+    JEKONEC
+    opravdu x == 1 HEIL
+        error()
+    opravdudva x == -2 HEIL
+        nashledanou
+    JEKONEC
+
+    zabijuteln("")
+JEKONEC
