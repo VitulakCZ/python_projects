@@ -22,6 +22,23 @@ def links(jmeno="links_beta.py"):
 
 def shell_args(shell_spaces):
 	#print(shell_spaces)
+	n_args = []
+	n_str = ""
+	if "\\" in str(shell_spaces):
+		for i, shell_space in enumerate(shell_spaces[1:]):
+			if shell_space.endswith("\\") and shell_space != shell_spaces[-1]:
+				n_str += shell_space.replace("\\", " ")
+			elif "\\" in shell_space:
+				n_str = "<Invalid Escape Sequence>"
+				n_args.append(n_str)
+				break
+			else:
+				n_str += shell_space
+				n_args.append(n_str)
+				n_str = ""
+	#print(n_args)
+	if len(n_args) > 0:
+		return (n_args, len(n_args))
 	args = []
 	pocet_args = 0
 	for i, space in enumerate(shell_spaces):
@@ -29,7 +46,6 @@ def shell_args(shell_spaces):
 			continue
 		if space == "":
 			continue
-
 		args.append(space)
 		pocet_args += 1
 	return (args, pocet_args)
@@ -1495,7 +1511,7 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 							os.chdir(os.getcwd() + "/" + args[0])
 					except PermissionError:
 						print(f"{Fore.LIGHTRED_EX}You don't have permission to open this directory!{Fore.RESET}")
-					except FileNotFoundError:
+					except (NotADirectoryError, FileNotFoundError):
 						print(f"{Fore.LIGHTRED_EX}Directory not found!{Fore.RESET}")
 				else:
 					print("Another key!")
@@ -1516,5 +1532,15 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 						print(f"{Fore.LIGHTRED_EX}Directory not found!{Fore.RESET}")
 				else:
 					print("Another key!")
+			elif shell_spaces[0] == "cat":
+				args, pocet_args = shell_args(shell_spaces)
+				if pocet_args == 1:
+					try:
+						with open(args[0], "r") as f:
+							print(f.read())
+					except PermissionError:
+						print(f"{Fore.LIGHTRED_EX}You don't have permission to see this directory!{Fore.RESET}")
+					except FileNotFoundError:
+						print(f"{Fore.LIGHTRED_EX}Directory not found!{Fore.RESET}")
 			else:
 				print("Another key!")
