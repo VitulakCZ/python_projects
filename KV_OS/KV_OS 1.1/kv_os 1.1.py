@@ -166,11 +166,11 @@ while True:
 	os.system(clear)
 	if home == "G":
 		if language == "en":
-			game = input("__________________\n		 Game\n__________________\nprocesing...\npress S = Singleplayer\n	   M = Multiplayer\n	  LI = Load a game\nL = Leaderboards: ").upper()
+			game = input("__________________\n       Game\n__________________\nprocesing...\npress S = Singleplayer\n      M = Multiplayer\n      LI = Load a game\nL = Leaderboards: ").upper()
 		elif language == "cz":
-			game = input("__________________\n		  Hra\n__________________\nnačítání...\nstiskněte S = Singleplayer\n		  M = Multiplayer\n			 LI = Načíst hru\nL = Žebříčky: ").upper()
+			game = input("__________________\n        Hra\n__________________\nnačítání...\nstiskněte S = Singleplayer\n          M = Multiplayer\n          LI = Načíst hru\nL = Žebříčky: ").upper()
 		elif language == "de":
-			game = input("_________________\n	   Spiel\n_________________\nWird geladen...\ndrücke S = Singleplayer\n		  M = Multiplayer\n		  LI = Laden Sie ein Spiel\nL = Bestenlisten: ").upper()
+			game = input("_________________\n      Spiel\n_________________\nWird geladen...\ndrücke S = Singleplayer\n       M = Multiplayer\n       LI = Laden Sie ein Spiel\nL = Bestenlisten: ").upper()
 		os.system(clear)
 		if game == "S":
 			obtiznost = None
@@ -1139,22 +1139,22 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 0.4 BETA UPDATE:
   • We fixed bug, where any incorrect input turn off the OS
   • You can finally use function dfn() for some reasons:
-	- You can write your variables with function write(dfn)
-	- You can write all your variables with function dfn(show)
+    - You can write your variables with function write(dfn)
+    - You can write all your variables with function dfn(show)
 0.5 BETA UPDATE:
   • Function write() has got a new update:
-	- write("Hello!") should write "Hello!" to the console
+    - write("Hello!") should write "Hello!" to the console
   • We remake the login system (data is in file data05.txt)
   • We aded an options menu:
-	- In the options menu you can change the language
+    - In the options menu you can change the language
 0.6 BETA UPDATE
   • We added a game for Czech
 0.7 BETA UPDATE:
   • We fixed some bugs in the game (textova_hra.py):
-	- 0 money bug in investing is now fixed
-	- Bank is now fixed
-	- If you die, you can see why
-	- If you exit the game, you will go to menu
+    - 0 money bug in investing is now fixed
+    - Bank is now fixed
+    - If you die, you can see why
+    - If you exit the game, you will go to menu
   • We rewrote the write("*") system
   • We added some {Style.BRIGHT}{Fore.YELLOW}colors{Style.RESET_ALL} to the OS
   • You can now use dfn(something = something) like that
@@ -1205,22 +1205,22 @@ PRESS ANY KEY TO CONTINUE: """, end="")
 0.4 BETA AKTUALIZACE:
   • Opravili jsme chybu, kdy každý špatný input vypnul OS
   • Konečně máte proč využít dfn() funkci:
-	- Můžete napsat proměnnou pomocí write(dfn)
-	- Můžete zobrazit všechny vaše proměnné pomocí dfn(show)
+    - Můžete napsat proměnnou pomocí write(dfn)
+    - Můžete zobrazit všechny vaše proměnné pomocí dfn(show)
 0.5 BETA AKTUALIZACE:
   • Funkce write() dostala novou aktualizaci:
-	- write("Ahoj!") by mělo napsat "Ahoj!" do konzole
+    - write("Ahoj!") by mělo napsat "Ahoj!" do konzole
   • Předělali jsme přihlašovací systém (data jsou ve složce data05.txt)
   • Přidali jsme options menu:
-	- Můžete si vybrat jazyk
+    - Můžete si vybrat jazyk
 0.6 BETA AKTUALIZACE:
   • Přidali jsme hru pro češtinu
 0.7 BETA AKTUALIZACE:
   • Opravili jsme nějaké chyby ve hře (textova_hra.py):
-	- 0 peněz chyba v investování byla opravena
-	- Banka byla opravena
-	- Když umřete, uvidíte proč
-	- Když opustíte hru, vrátíte se do menu
+    - 0 peněz chyba v investování byla opravena
+    - Banka byla opravena
+    - Když umřete, uvidíte proč
+    - Když opustíte hru, vrátíte se do menu
   • Předělali jsme write("*") systém
   • Přidali jsme {Style.BRIGHT}{Fore.YELLOW}barvy{Style.RESET_ALL} do OS
   • Už můžete napsat dfn(něco = něco) přesně takto
@@ -1271,22 +1271,22 @@ POKRAČUJTE STISKEM LIBOVOLNÉ KLÁVESY: """, end="")
 0.4 BETA-UPDATE:
    • Wir haben einen Fehler behoben, bei dem jede falsche Eingabe das Betriebssystem ausschaltet
    • Sie können endlich die Funktion dfn() aus einigen Gründen verwenden:
-	 - Sie können Ihre Variablen mit der Funktion write(dfn) schreiben
-	 - Sie können alle Ihre Variablen mit der Funktion dfn(show) schreiben
+     - Sie können Ihre Variablen mit der Funktion write(dfn) schreiben
+     - Sie können alle Ihre Variablen mit der Funktion dfn(show) schreiben
 0.5 BETA-UPDATE:
    • Funktion write() hat ein neues Update bekommen:
-	 - write("Hallo!") sollte "Hallo!" schreiben. zur Konsole
+     - write("Hallo!") sollte "Hallo!" schreiben. zur Konsole
    • Wir machen das Login-System neu (Daten sind in der Datei data05.txt)
    • Wir haben ein Optionsmenü hinzugefügt:
-	 - Im Optionsmenü können Sie die Sprache ändern
+     - Im Optionsmenü können Sie die Sprache ändern
 0.6 BETA-UPDATE:
   • Wir haben ein Spiel für Tschechisch hinzugefügt
 0.7 BETA-UPDATE:
   • Wir haben einige Fehler im Spiel behoben (textova_hra.py):
-	- 0 Geldfehler beim Investieren ist jetzt behoben
-	- Bank ist jetzt repariert
-	- Wenn du stirbst, kannst du sehen warum
-	- Wenn Sie das Spiel verlassen, gelangen Sie zum Menü
+    - 0 Geldfehler beim Investieren ist jetzt behoben
+    - Bank ist jetzt repariert
+    - Wenn du stirbst, kannst du sehen warum
+    - Wenn Sie das Spiel verlassen, gelangen Sie zum Menü
   • Wir haben das write("*")-System umgeschrieben
   • Wir haben einige {Style.BRIGHT}{Fore.YELLOW}Farben{Style.RESET_ALL} zum Betriebssystem hinzugefügt
   • Sie können dfn(etwas = etwas) jetzt so verwenden
@@ -1542,12 +1542,12 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 				args, pocet_args = shell_args(shell_spaces)
 				if pocet_args == 0:
 					for d in os.listdir():
-						print(d, end="	")
+						print(d, end="  ")
 					print()
 				elif pocet_args == 1:
 					try:
 						for d in os.listdir(args[0]):
-							print(d, end="	")
+							print(d, end="  ")
 						print()
 					except PermissionError:
 						print(f"{Fore.LIGHTRED_EX}You don't have permission to see this directory!{Fore.RESET}")
