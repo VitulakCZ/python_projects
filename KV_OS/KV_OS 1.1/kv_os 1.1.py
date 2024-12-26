@@ -58,56 +58,67 @@ Fuck you!""")
 		print(f"""\
 Fuck you with {command}!""")
 
-def kvscr():
-	promenne = {}
-	while True:
-		prg = input(">>> ")
-		if prg == "write()":
-			write = input(">>>> ")
-			print(write)
-		elif prg == "write(dfn)":
-			write_var = input(">>>> ")
-			if write_var in promenne:
-				print(promenne.get(write_var))
-			else:
-				print(f"{Fore.RED}This isn't a variable!{Fore.RESET}")
-		elif prg.startswith("write(\"") and prg.endswith("\")"):
-			novy_write = prg.split("write(\"", maxsplit=1)[1].split("\")")[0]
-			if "\"" in novy_write:
-				print(f"{Fore.RED}You can't have \" in your text!{Fore.RESET}")
-			else:
-				print(novy_write)
-		elif prg.startswith("write(") and not prg.startswith("write(\"") and prg.endswith(")") and not prg.endswith("\")"):
-			w_dfn = prg.split("write(", maxsplit=1)[1].split(")")[0]
-			if w_dfn in promenne:
-				print(promenne.get(w_dfn))
-			else:
-				print(f"{Fore.RED}This isn't a variable!{Fore.RESET}")
-		elif prg == "dfn()":
-			dfn = input(">>>> ")
-			dfn_jako = input("= ")
-			promenne[dfn] = dfn_jako
-		elif prg == "dfn(show)":
-			for promenna in promenne:
-				print(f"{promenna} = {promenne.get(promenna)}")
-		elif prg.startswith("dfn(") and prg.endswith(")") and " = " in prg and prg != "dfn()":
-			novy_dfn = prg.split("dfn(", maxsplit=1)[1].split(" = ", maxsplit=1)
-			promenne[novy_dfn[0]] = novy_dfn[1][:-1]
-		elif prg == "while true":
-			kolo = input(">>>> ")
-			ready = input("If you are ready, press B: ").upper()
-			if ready == "B":
-				while True:
-					print(kolo)
-			else:
-				print("Another key!")
-		elif prg == "cls" or prg == "clear":
-			os.system(clear)
-		elif prg == "exit" or prg == "exit()":
-			os.system(clear)
-			break
+promenne = {}
+def kv_script(prg):
+	global promenne
+	if prg == "write()":
+		write = input(">>>> ")
+		print(write)
+	elif prg == "write(dfn)":
+		write_var = input(">>>> ")
+		if write_var in promenne:
+			print(promenne.get(write_var))
+		else:
+			print(f"{Fore.RED}This isn't a variable!{Fore.RESET}")
+	elif prg.startswith("write(\"") and prg.endswith("\")"):
+		novy_write = prg.split("write(\"", maxsplit=1)[1].split("\")")[0]
+		if "\"" in novy_write:
+			print(f"{Fore.RED}You can't have \" in your text!{Fore.RESET}")
+		else:
+			print(novy_write)
+	elif prg.startswith("write(") and not prg.startswith("write(\"") and prg.endswith(")") and not prg.endswith("\")"):
+		w_dfn = prg.split("write(", maxsplit=1)[1].split(")")[0]
+		if w_dfn in promenne:
+			print(promenne.get(w_dfn))
+		else:
+			print(f"{Fore.RED}This isn't a variable!{Fore.RESET}")
+	elif prg == "dfn()":
+		dfn = input(">>>> ")
+		dfn_jako = input("= ")
+		promenne[dfn] = dfn_jako
+	elif prg == "dfn(show)":
+		for promenna in promenne:
+			print(f"{promenna} = {promenne.get(promenna)}")
+	elif prg.startswith("dfn(") and prg.endswith(")") and " = " in prg and prg != "dfn()":
+		novy_dfn = prg.split("dfn(", maxsplit=1)[1].split(" = ", maxsplit=1)
+		promenne[novy_dfn[0]] = novy_dfn[1][:-1]
+	elif prg == "while true":
+		kolo = input(">>>> ")
+		ready = input("If you are ready, press B: ").upper()
+		if ready == "B":
+			while True:
+				print(kolo)
 		else:
 			print("Another key!")
+	elif prg == "cls" or prg == "clear":
+		os.system(clear)
+	elif prg == "exit" or prg == "exit()":
+		return False
+	else:
+		print("Another key!")
+	return True
+
+def kvscr(args):
+	global promenne
+	promenne = {}
+	if args == []:
+		running = True
+		while running:
+			prg = input(">>> ")
+			running = kv_script(prg)
+		return
+	for arg in args:
+		kv_script(arg)
 	return
 
 def convert_time(endtime):
@@ -1123,7 +1134,7 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 			else:
 				links()
 	elif home == "P":
-		kvscr()
+		kvscr([])
 	elif home == "N":
 		if language == "en":
 			print(f"""\
@@ -1566,10 +1577,13 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 					except PermissionError:
 						print(f"{Fore.LIGHTRED_EX}You don't have permission to see this directory!{Fore.RESET}")
 					except FileNotFoundError:
-						print(f"{Fore.LIGHTRED_EX}Directory not found!{Fore.RESET}")
+						print(f"{Fore.LIGHTRED_EX}File not found!{Fore.RESET}")
 				else:
 					print("Another key!")
 			elif shell_spaces[0] == "kvscr":
-				kvscr()
+				args, pocet_args = shell_args(shell_spaces)
+				kvscr(args)
+			elif shell_spaces[0] == "kvws":
+				pass
 			else:
 				print("Another key!")
