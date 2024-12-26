@@ -181,6 +181,7 @@ def kvws_SP(args):
 		if obtiznost == "S":
 			if user is not None:
 				speedrun_mod = not speedrun_mod
+				obtiznost = None
 			else:
 				if language == "en":
 					print(f"{Fore.RED}You have to be logged in to be able to play Speedrun mode!{Fore.RESET}\n")
