@@ -8,20 +8,10 @@ from pygame import mixer
 mixer.init()
 init()
 clear = "cls" if os.name == "nt" else "clear"
-VERSION = "1.1"
+VERSION = "1.1.1"
 
 user = None
 language = "en"
-
-def links(jmeno="links_beta.py"):
-	# Otevřít links_beta.py
-	try:
-		with open(jmeno, encoding="utf-8") as f:
-			exec(f.read())
-	except FileNotFoundError:
-		print(f"{Fore.LIGHTRED_EX}Soubor \"{Fore.RED}{jmeno}{Fore.LIGHTRED_EX}\" nebyl nalezen.\nVložte ho do složky KV_OS {VERSION}{Fore.RESET}")
-	except:
-		pass
 
 def shell_args(shell_spaces):
 	#print(shell_spaces)
@@ -58,6 +48,24 @@ def shell_args(shell_spaces):
 		args.append(space)
 		pocet_args += 1
 	return (args, pocet_args)
+
+def links(jmeno="links_beta.py"):
+	# Otevřít links_beta.py
+	if "\\" in jmeno:
+		links_args = [""]
+		links_args.extend(jmeno.split(" "))
+		jmeno, pocet_args = shell_args(links_args)
+		if pocet_args > 1:
+			print("Co po mně chceš?")
+			return
+		jmeno = jmeno[0]
+	try:
+		with open(jmeno, encoding="utf-8") as f:
+			exec(f.read())
+	except FileNotFoundError:
+		print(f"{Fore.LIGHTRED_EX}Soubor \"{Fore.RED}{jmeno}{Fore.LIGHTRED_EX}\" nebyl nalezen.\nVložte ho do složky KV_OS {VERSION}{Fore.RESET}")
+	except:
+		pass
 
 def shell_help(command=None):
 	if command is None:
