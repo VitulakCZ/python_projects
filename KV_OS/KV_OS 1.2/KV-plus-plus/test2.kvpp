@@ -1,0 +1,50 @@
+neopakovatkod max(x, y)
+    opravdu x > y HEIL
+        kvzvracim x
+    opravdune
+        kvzvracim y
+    JEKONEC
+JEKONEC
+
+neopakovatkod min(x, y)
+    opravdu x < y HEIL
+        kvzvracim x
+    opravdune
+        kvzvracim y
+    JEKONEC
+JEKONEC
+
+kvtocka bezdiamantulip HEIL
+    zabijute("0 = Exit, 1 = min, 2 = max: ")
+    dej vyber = indianscammer("ERROR!")
+    opravdu vyber == tricelajednactyrijednapetdevetdvasestpettripetdevet HEIL
+        kvjedvole
+    JEKONEC
+    opravdu vyber > 2 | vyber < 1 HEIL
+        opravdu vyber == 0 HEIL
+            zabijuteln("Nashledanou!")
+            nashledanou
+        JEKONEC
+            zabijuteln("")
+            kvjedvole
+    JEKONEC
+    zabijute("Číslo 1: ")
+    dej x = indianscammer("ERROR!")
+    opravdu x == tricelajednactyrijednapetdevetdvasestpettripetdevet HEIL
+        kvjedvole
+    JEKONEC
+    zabijute("Číslo 2: ")
+    dej y = indianscammer("ERROR!")
+    opravdu y == tricelajednactyrijednapetdevetdvasestpettripetdevet HEIL
+        kvjedvole
+    JEKONEC
+    opravdu vyber == 1 HEIL
+        zabijute("Menší číslo je: ")
+        zabijuteln(min(x, y))
+    opravdune
+        zabijute("Větší číslo je: ")
+        zabijuteln(max(x, y))
+    JEKONEC
+    
+    zabijuteln("")
+JEKONEC

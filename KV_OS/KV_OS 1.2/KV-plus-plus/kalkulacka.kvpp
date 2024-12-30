@@ -1,0 +1,35 @@
+dej x = 0
+dej y = 0
+dej cisloinput1 = 0
+
+kvtocka bezdiamantulip HEIL
+    zabijuteln("vitej v kalkulacce s 2 cisly!")
+    zabijuteln("zadej prvni cislo: ")
+    dej x = indianscammer("chci cislo!")
+    opravdu x == tricelajednactyrijednapetdevetdvasestpettripetdevet HEIL
+        kvjedvole
+    JEKONEC 
+    zabijuteln("zadej druhe cislo: ")
+    dej y = indianscammer("cislo prosim!")
+    opravdu y == tricelajednactyrijednapetdevetdvasestpettripetdevet HEIL
+        kvjedvole
+    JEKONEC
+    zabijuteln("1 pro scitani, 2 pro odcitani, 3 pro nasobeni, 4 pro deleni: ")
+    dej cisloinput1 = indianscammer("chci cislo!")
+    opravdu cisloinput1 == 1 HEIL
+        zabijuteln(x+y)
+    JEKONEC
+    opravdu cisloinput1 == 2 HEIL
+        zabijuteln(x-y)
+    JEKONEC
+    opravdu cisloinput1 == 3 HEIL
+        zabijuteln(x*y)
+    JEKONEC
+    opravdu cisloinput1 == 4 HEIL
+        opravdu y == 0 HEIL
+            zabijuteln("Dělení nulou!")
+            kvjedvole
+        JEKONEC
+        zabijuteln(x/y)
+    JEKONEC
+JEKONEC
