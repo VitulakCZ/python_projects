@@ -1,0 +1,6 @@
+[submodule "KV_OS/KV_OS 1.1/KV-plus-plus"]
+	path = KV_OS/KV_OS 1.1/KV-plus-plus
+	url = https://github.com/VitulakCZ/KV-plus-plus
+[submodule "KV_OS/KV_OS 1.2/KV-plus-plus"]
+	path = KV_OS/KV_OS 1.2/KV-plus-plus
+	url = https://github.com/VitulakCZ/KV-plus-plus
