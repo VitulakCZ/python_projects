@@ -1781,7 +1781,7 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 	elif home == "A":
 		print("AAA")
 	elif home == "S":
-		print(f"Welcome to the KV OS Shell v0.1 (built for KV OS 1.2). ©2024 ALL RIGHTS RESERVED!")
+		print(f"Welcome to the KV OS Shell v0.2rc (built for KV OS 1.2). ©2024 ALL RIGHTS RESERVED!")
 		print("Type 'help' for more information.")
 		while True:
 			anonymous = "Anonymous"
