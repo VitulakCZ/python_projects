@@ -225,6 +225,12 @@ def strana_uhel_trojuhelniku():
 					elif uhel_b is not None and strana_c is not None:
 						strana_b = strana_c*(math.sin(uhel_b*math.pi/180))
 						strana_a = math.sqrt(strana_c**2 - strana_b**2)
+					elif uhel_a is not None and uhel_b is not None:
+						print("ERROR: Nelze vypočítat podle dvou úhlů!")
+						pocet_informaci = 0
+						uhel_a = None
+						uhel_b = None
+						continue
 					uhel_a = math.asin(strana_a/strana_c)/(math.pi/180) if uhel_a is None else uhel_a
 					uhel_b = uhel_c - uhel_a
 					strana_a = round(strana_a, 5)
@@ -283,6 +289,7 @@ Strana c (Přepona)   = {"?" if strana_c is None else strana_c} m   [C pro změn
 						if zmena <= 0:
 							raise ValueError
 						if zmena >= 90:
+							print("Neplatný úhel!")
 							continue
 						uhel_a = zmena
 						pocet_informaci += 1
@@ -295,6 +302,7 @@ Strana c (Přepona)   = {"?" if strana_c is None else strana_c} m   [C pro změn
 						if zmena <= 0:
 							raise ValueError
 						if zmena >= 90:
+							print("Neplatný úhel!")
 							continue
 						uhel_b = zmena
 						pocet_informaci += 1
