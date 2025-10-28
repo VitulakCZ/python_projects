@@ -10,7 +10,7 @@ from pygame import mixer
 mixer.init()
 init()
 clear = "cls" if os.name == "nt" else "clear"
-VERSION = "1.2 rc1"
+VERSION = "1.2"
 
 user = None
 language = "en"
@@ -128,6 +128,15 @@ def kv_script(prg):
 	return True
 
 def kvws_SP(args):
+	PENIZE = 3
+	PENIZE_HARD = 0
+	VOJACI_EASY = 2000
+	VOJACI = 0
+	OBSADIT_EASY = 30
+	OBSADIT_NORMAL = 57
+	OBSADIT_HARD = 70
+	PENIZE_ZA_KOLO = 2
+
 	obtiznost = None
 	speedrun_mod = False
 	hrat = True
@@ -204,71 +213,71 @@ def kvws_SP(args):
 			if language == "en":
 				input("""\
 EASY difficulty
-- You start with 3 mld. money
-- You start with 2000 soldiers
-- Until you don't invest, you get 2 mld. money per round
-- If you want to win, you have to have 30 areas
+- You start with {} mld. money
+- You start with {} soldiers
+- Until you don't invest, you get {} mld. money per round
+- If you want to win, you have to have {} areas
 - You can invest to 10 money per round
-- Invensions come each 10 rounds to your country
+- Invasions come each 10 rounds to your country
 - Invasions are always per 1000 soldiers
-Press any key to continue: """)
+Press any key to continue: """.format(PENIZE, VOJACI_EASY, PENIZE_ZA_KOLO, OBSADIT_EASY))
 			elif language == "cz":
 				input("""\
 EASY obtížnost
-- Začínáte s 3 mld. penězi
-- Začínáte s 2000 vojáky
-- Dokud neinvestujete, získáváte 2 mld. peněz za kolo
-- Chcete-li vyhrát, musíte získat 30 území
+- Začínáte s {} mld. penězi
+- Začínáte s {} vojáky
+- Dokud neinvestujete, získáváte {} mld. peněz za kolo
+- Chcete-li vyhrát, musíte získat {} území
 - Investovat můžete do 10 peněz za kolo
 - Invaze do vaší země se konají každých 10 kol
 - Invaze jsou vždy po 1000 vojácích
-Jakoukoli klávesou pokračujte: """)
+Jakoukoli klávesou pokračujte: """.format(PENIZE, VOJACI_EASY, PENIZE_ZA_KOLO, OBSADIT_EASY))
 			elif language == "de":
 				input("""\
 EINFACHE Schwierigkeit
-- Sie beginnen mit 3 mld. Geld
-- Sie beginnen mit 2000 Soldaten
-- Bis Sie nicht investieren, erhalten Sie 2 mld. Geld pro Runde
-- Wenn du gewinnen willst, musst du 30 Gebiete haben
+- Sie beginnen mit {} mld. Geld
+- Sie beginnen mit {} Soldaten
+- Bis Sie nicht investieren, erhalten Sie {} mld. Geld pro Runde
+- Wenn du gewinnen willst, musst du {} Gebiete haben
 - Sie können bis zu 10 Geld pro Runde investieren
 - Erfindungen kommen alle 10 Runden in dein Land
 - Invasionen sind immer pro 1000 Soldaten
-Drücken Sie eine beliebige Taste, um fortzufahren: """)
+Drücken Sie eine beliebige Taste, um fortzufahren: """.format(PENIZE, VOJACI_EASY, PENIZE_ZA_KOLO, OBSADIT_EASY))
 			break
 		elif obtiznost == "N":
 			if language == "en":
 				input("""\
 NORMAL difficulty
-- You start with 3 mld. money
+- You start with {} mld. money
 - You don't start with any soldiers
-- Until you don't invest, you get 2 mld. money per round
-- If you want to win, you have to have 57 areas
+- Until you don't invest, you get {} mld. money per round
+- If you want to win, you have to have {} areas
 - You can invest to 5 money per round
 - Invasions come each 5 rounds to your country
 - Invasions are always per 1000 soldiers
-Press any key to continue: """)
+Press any key to continue: """.format(PENIZE, PENIZE_ZA_KOLO, OBSADIT_NORMAL))
 			elif language == "cz":
 				input("""\
 NORMAL obtížnost
-- Začínáte s 3 mld. penězi
+- Začínáte s {} mld. penězi
 - Nezačínáte s žádnými vojáky
-- Dokud neinvestujete, získáváte 2 mld. peněz za kolo
-- Chcete-li vyhrát, musíte získat 57 území
+- Dokud neinvestujete, získáváte {} mld. peněz za kolo
+- Chcete-li vyhrát, musíte získat {} území
 - Investovat můžete do 5 peněz za kolo
 - Invaze do vaší země se konají každých 5 kol
 - Invaze jsou vždy po 1000 vojácích
-Jakoukoli klávesou pokračujte: """)
+Jakoukoli klávesou pokračujte: """.format(PENIZE, PENIZE_ZA_KOLO, OBSADIT_NORMAL))
 			elif language == "de":
 				input("""\
 NORMALE Schwierigkeit
-- Sie beginnen mit 3 mld. Geld
+- Sie beginnen mit {} mld. Geld
 - Du fängst nicht mit irgendwelchen Soldaten an
-- Bis Sie nicht investieren, erhalten Sie 2 mld. Geld pro Runde
-- Wenn du gewinnen willst, musst du 57 Gebiete haben
+- Bis Sie nicht investieren, erhalten Sie {} mld. Geld pro Runde
+- Wenn du gewinnen willst, musst du {} Gebiete haben
 - Sie können bis zu 5 Geld pro Runde investieren
 - Invasionen kommen alle 5 Runden in dein Land
 - Invasionen sind immer pro 1000 Soldaten
-Drücken Sie eine beliebige Taste, um fortzufahren: """)
+Drücken Sie eine beliebige Taste, um fortzufahren: """.format(PENIZE, PENIZE_ZA_KOLO, OBSADIT_NORMAL))
 			break
 		elif obtiznost == "H":
 			if language == "en":
@@ -276,34 +285,34 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 HARD difficulty
 - You don't start with any money
 - You don't start with any soldiers
-- Until you don't invest, you get 2 mld. money per round
-- If you want to win, you have to have 70 areas
+- Until you don't invest, you get {} mld. money per round
+- If you want to win, you have to have {} areas
 - You can invest to 5 money per round
 - Invasions come each 5 rounds to your country
 - Invasions are always per 2000 soldiers
-Press any key to continue: """)
+Press any key to continue: """.format(PENIZE_ZA_KOLO, OBSADIT_HARD))
 			elif language == "cz":
 				input("""\
 HARD obtížnost
 - Nezačínáte s žádnými penězi
 - Nezačínáte s žádnými vojáky
-- Dokud neinvestujete, získáváte 2 mld. peněz za kolo
-- Chcete-li vyhrát, musíte získat 70 území
+- Dokud neinvestujete, získáváte {} mld. peněz za kolo
+- Chcete-li vyhrát, musíte získat {} území
 - Investovat můžete do 5 peněz za kolo
 - Invaze do vaší země se konají každých 5 kol
 - Invaze jsou vždy po 2000 vojácích
-Jakoukoli klávesou pokračujte: """)
+Jakoukoli klávesou pokračujte: """.format(PENIZE_ZA_KOLO, OBSADIT_HARD))
 			elif language == "de":
 				input("""\
 SCHWERE Schwierigkeit
 - Sie beginnen nicht mit Geld
 - Du fängst nicht mit irgendwelchen Soldaten an
-- Bis Sie nicht investieren, erhalten Sie 2 mld. Geld pro Runde
-- Wenn du gewinnen willst, musst du 70 Gebiete haben
+- Bis Sie nicht investieren, erhalten Sie {} mld. Geld pro Runde
+- Wenn du gewinnen willst, musst du {} Gebiete haben
 - Sie können bis zu 5 Geld pro Runde investieren
 - Invasionen kommen alle 5 Runden in dein Land
 - Invasionen sind immer pro 2000 Soldaten
-Drücken Sie eine beliebige Taste, um fortzufahren: """)
+Drücken Sie eine beliebige Taste, um fortzufahren: """.format(PENIZE_ZA_KOLO, OBSADIT_HARD))
 			break
 		else:
 			print("Another key!")
@@ -337,22 +346,22 @@ Drücken Sie eine beliebige Taste, um fortzufahren: """)
 			if speedrun_mod:
 				starttime = time.time()
 			if obtiznost == "H":
-				penize = 0
+				penize = PENIZE_HARD
 			else:
-				penize = 3
+				penize = PENIZE
 			if obtiznost == "E":
-				vojaci = 2000
+				vojaci = VOJACI_EASY
 			else:
-				vojaci = 0
+				vojaci = VOJACI
 			kola = 1
 			if obtiznost == "E":
-				obsadit = 30
+				obsadit = OBSADIT_EASY
 			elif obtiznost == "N":
-				obsadit = 57
+				obsadit = OBSADIT_NORMAL
 			elif obtiznost == "H":
-				obsadit = 70
+				obsadit = OBSADIT_HARD
 			banka = 0
-			penize_za_kolo = 2
+			penize_za_kolo = PENIZE_ZA_KOLO
 			while True:
 				if obsadit == 0:
 					mixer.music.load("teticka_song.wav")
@@ -1284,7 +1293,7 @@ def kved(args):
 					radky.pop(cursor - 1)
 					cursor -= 1
 				except IndexError:
-						print("?")
+					print("?")
 			elif edin == "w" and file is not None:
 				with open(file, "w") as f:
 					for radek in radky:
@@ -1317,44 +1326,80 @@ def kved(args):
 						else:
 							command += char
 				else:
-					if command == "":
-						to_print = ""
-						is_to_print = False
-						cisla_carky_list = []
-						cislo_carky = ""
-						for char in cisla_carky:
-							if char == ",":
-								if cislo_carky != "":
-									cisla_carky_list.append(cislo_carky)
-									cislo_carky = ""
-								cisla_carky_list.append(char)
-							else:
-								cislo_carky += char
-						if cislo_carky != "":
-							cisla_carky_list.append(cislo_carky)
-						for char in cisla_carky_list:
-							if char == ",":
-								try:
-									if not is_to_print:
-										cursor = len(radky)
-										to_print = radky[cursor - 1]
-										is_to_print = True
-								except IndexError:
-									print("?")
-									break
-							else:
-								char = int(char)
-								cursor = char
-								try:
+					to_print = ""
+					is_to_print = False
+					cisla_carky_list = []
+					cislo_carky = ""
+					for char in cisla_carky:
+						if char == ",":
+							if cislo_carky != "":
+								cisla_carky_list.append(cislo_carky)
+								cislo_carky = ""
+							cisla_carky_list.append(char)
+						else:
+							cislo_carky += char
+					if cislo_carky != "":
+						cisla_carky_list.append(cislo_carky)
+					for char in cisla_carky_list:
+						if char == ",":
+							try:
+								if not is_to_print:
+									cursor = len(radky)
 									to_print = radky[cursor - 1]
 									is_to_print = True
-								except IndexError:
-									print("?")
-									break
+							except IndexError:
+								print("?")
+								break
 						else:
-							print(to_print)
+							char = int(char)
+							cursor = char
+							try:
+								assert(char > 0)
+								to_print = radky[cursor - 1]
+								is_to_print = True
+							except (IndexError, AssertionError):
+								print("?")
+								break
 					else:
-						print("Command nesting comming soon...")
+						komplexni_vzorec = False
+						cisla_carky_list = cisla_carky_list[:3]
+						if "," in cisla_carky_list:
+							komplexni_vzorec = True
+						if command == "":
+							print(to_print)
+						else:
+							if komplexni_vzorec:
+								prvni_cislo = 0
+								druhe_cislo = -1
+								for i in range(len(cisla_carky_list)):
+									if cisla_carky_list[i] == ",":
+										if i == 0:
+											continue
+										try:
+											prvni_cislo = int(cisla_carky_list[i-1])
+											try:
+												druhe_cislo = int(cisla_carky_list[i+1])
+											except IndexError:
+												pass
+										except ValueError:
+											break
+								if druhe_cislo == -1 and prvni_cislo == 0:
+									druhe_cislo = len(radky)
+								if prvni_cislo == 0:
+									prvni_cislo = 1
+								if druhe_cislo == -1:
+									druhe_cislo = prvni_cislo
+							else:
+								prvni_cislo = int(cisla_carky_list[0])
+								druhe_cislo = prvni_cislo
+							for pocet_iteraci, i in enumerate(range(prvni_cislo, druhe_cislo + 1)):
+								if command == "p":
+									print(radky[i - 1])
+								elif command == "n":
+									print(f"{i}\t" + radky[i - 1])
+								elif command == "d" and i != druhe_cislo + 1:
+									radky.pop((i - 1) - pocet_iteraci)
+									cursor -= 1
 		else:
 			if edin == ".":
 				append_mode = False
@@ -1440,7 +1485,7 @@ def jazyk(args):
 pwd = os.getcwd()
 os.system(clear)
 while True:
-	print(f"{Fore.GREEN}KV system {VERSION}\n©1995 - 2024 ALL RIGHTS RESERVED!{Fore.RESET}\n")
+	print(f"{Fore.GREEN}KV system {VERSION}\n©1995 - 2025 ALL RIGHTS RESERVED!{Fore.RESET}\n")
 	if user == None:
 		if language == "en":
 			print(f"{Fore.RED}YOU ARE NOT LOGGED IN!{Style.RESET_ALL}")
@@ -1615,6 +1660,11 @@ while True:
   • New 'lang' command in KV OS Shell, which changes the language
   • New 'load' command in KV OS Shell, which does the same thing as "loading a game"
   • New 'kved' command in KV OS Shell, a simple Ed like editor, you can already do basic stuff with it, but it's not complete
+1.2 UPDATE
+  • KV Ed now supports command nesting
+  • Leaderboards are now properly sorted
+  • We fixed the bug, where you could register using an already registered username
+  • Minor changes to the internals of KVWS Singleplayer
 PRESS ANY KEY TO CONTINUE: """, end="")
 		elif language == "cz":
 			print(f"""\
@@ -1686,6 +1736,11 @@ PRESS ANY KEY TO CONTINUE: """, end="")
   • Nový příkaz 'lang' v KV OS Shellu, s nímž můžete měnit jazyk
   • Nový příkaz 'load' v KV OS Shellu, má stejnou funkci jako "načíst hru"
   • Nový příkaz 'kved' v KV OS Shellu, což je jednoduchý Ed like editor, můžete s ním už dělat základní věci, ale není hotový
+1.2 UPDATE
+  • KV Ed nově podporuje složené příkazy
+  • Žebříčky jsou teď správně seřazeny
+  • Opravili jsme bug, kde jste se mohli registrovat jménem, které už bylo zaregistrováno
+  • Malé vnitřní změny v KVWS Singleplayer
 POKRAČUJTE STISKEM LIBOVOLNÉ KLÁVESY: """, end="")
 		elif language == "de":
 			print(f"""\
@@ -1757,6 +1812,11 @@ POKRAČUJTE STISKEM LIBOVOLNÉ KLÁVESY: """, end="")
   • Neuer Befehl „lang“ in der KV OS Shell, der die Sprache ändert
   • Neuer Befehl „load“ in der KV OS-Shell, der dasselbe bewirkt wie „Laden eines Spiels“
   • Neuer Befehl „kved“ in KV OS Shell, einem Standard-Ed-ähnlichen Editor, mit dem Sie bereits grundlegende Dinge tun können, aber er ist noch nicht vollständig
+1.2 UPDATE
+• KV Ed unterstützt jetzt die Befehlsverschachtelung
+• Bestenlisten sind jetzt korrekt sortiert
+• Wir haben einen Fehler behoben, bei dem Sie sich mit einem bereits registrierten Benutzernamen registrieren konnten
+• Kleinere Änderungen an den internen Komponenten des KVWS Singleplayer
 DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 		input()
 		os.system(clear)
@@ -1800,7 +1860,7 @@ DRÜCKEN SIE EINE BELIEBIGE TASTE, UM FORTZUFAHREN: """, end="")
 	elif home == "A":
 		print("AAA")
 	elif home == "S":
-		print(f"Welcome to the KV OS Shell v0.2rc (built for KV OS 1.2). ©2024 ALL RIGHTS RESERVED!")
+		print(f"Welcome to the KV OS Shell v0.2 (built for KV OS 1.2). ©2024-2025 ALL RIGHTS RESERVED!")
 		print("Type 'help' for more information.")
 		while True:
 			anonymous = "Anonymous"
