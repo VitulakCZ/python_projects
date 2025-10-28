@@ -1119,11 +1119,27 @@ def register(args):
 				w_password = arg
 			mode = None
 	w_username = input("Username: ") if w_username is None else w_username
+	try:
+		with open('data05.txt', 'r') as f:
+			for line in f.readlines():
+				data = line.rstrip()
+				username, zasifrovany_password = data.split("|")
+				if username == w_username:
+					if language == "en":
+						print(f"{Fore.RED}Something went wrong... User already exists!\n{Fore.RESET}")
+					elif language == "cz":
+						print(f"{Fore.RED}Něco dopadlo špatně... Uživatel již existuje!\n{Fore.RESET}")
+					elif language == "de":
+						print(f"{Fore.RED}Etwas ist schief gelaufen... Benutzer existiert bereits!\n{Fore.RESET}")
+					return
+	except FileNotFoundError:
+		pass
+
 	if w_username == "":
 		if language == "en":
 			print(f"{Fore.RED}Something went wrong... Your username can't be empty!\n{Fore.RESET}")
 		elif language == "cz":
-			print(f"{Fore.RED}Něco dopadlo špatně...Vaše užvatelské jméno nesmí být prázdné!\n{Fore.RESET}")
+			print(f"{Fore.RED}Něco dopadlo špatně... Vaše užvatelské jméno nesmí být prázdné!\n{Fore.RESET}")
 		elif language == "de":
 			print(f"{Fore.RED}Etwas ist schief gelaufen... Dein Benutzername darf nicht leer sein!\n{Fore.RESET}")
 		return
@@ -1141,7 +1157,7 @@ def register(args):
 		if language == "en":
 			print(f"{Fore.RED}Something went wrong... Your password can't be empty!\n{Fore.RESET}")
 		elif language == "cz":
-			print(f"{Fore.RED}Něco dopadlo špatně...Vaše heslo nesmí být prázdné!\n{Fore.RESET}")
+			print(f"{Fore.RED}Něco dopadlo špatně... Vaše heslo nesmí být prázdné!\n{Fore.RESET}")
 		elif language == "de":
 			print(f"{Fore.RED}Etwas ist schief gelaufen... Ihr Passwort darf nicht leer sein!\n{Fore.RESET}")
 		return
@@ -1153,14 +1169,14 @@ def register(args):
 			if language == "en":
 				print(f"{Fore.RED}Something went wrong... Please, try it again with another characters!\n{Fore.RESET}")
 			elif language == "cz":
-				print(f"{Fore.RED}Něco dopadlo špatně...Prosím, zkuste to s jinými písmeny!\n{Fore.RESET}")
+				print(f"{Fore.RED}Něco dopadlo špatně... Prosím, zkuste to s jinými písmeny!\n{Fore.RESET}")
 			elif language == "de":
 				print(f"{Fore.RED}Etwas ist schief gelaufen... Bitte versuchen Sie es erneut mit einem anderen Zeichen!\n{Fore.RESET}")
 	except:
 		if language == "en":
 			print(f"{Fore.RED}Something went wrong... Please, try it again with another characters!\n{Fore.RESET}")
 		elif language == "cz":
-			print(f"{Fore.RED}Něco dopadlo špatně...Prosím, zkuste to s jinými písmeny!\n{Fore.RESET}")
+			print(f"{Fore.RED}Něco dopadlo špatně... Prosím, zkuste to s jinými písmeny!\n{Fore.RESET}")
 		elif language == "de":
 			print(f"{Fore.RED}Etwas ist schief gelaufen... Bitte versuchen Sie es erneut mit einem anderen Zeichen!\n{Fore.RESET}")
 
@@ -1479,35 +1495,38 @@ while True:
 							leaderboards_normal[jmeno] = [fer.decrypt(zasifrovany_cas).decode(), int(fer.decrypt(zasifrovane_kolo).decode())]
 						elif obtiznost == "H":
 							leaderboards_hard[jmeno] = [fer.decrypt(zasifrovany_cas).decode(), int(fer.decrypt(zasifrovane_kolo).decode())]
-				leaderboards_easy = dict(sorted(leaderboards_easy.items(), key=lambda item: item[1][1]))
-				leaderboards_normal = dict(sorted(leaderboards_normal.items(), key=lambda item: item[1][1]))
-				leaderboards_hard = dict(sorted(leaderboards_hard.items(), key=lambda item: item[1][1]))
-				nejdelsi_jmeno = ""
-				for jmeno in leaderboards_easy.keys():
-					if len(jmeno) > len(nejdelsi_jmeno):
-						nejdelsi_jmeno = jmeno
-				print(f"{Style.BRIGHT}EASY:{Style.RESET_ALL}\nName" + " "*(len(nejdelsi_jmeno) - 4) + "\tRound\tTime")
-
-				for i, jmeno in enumerate(leaderboards_easy.keys()):
-					print(f"{jmeno}" + " "*(len(nejdelsi_jmeno) - len(jmeno)) + f"\t{list(leaderboards_easy.values())[i][1]}\t{list(leaderboards_easy.values())[i][0]}")
-				nejdelsi_jmeno = ""
-				for jmeno in leaderboards_normal.keys():
-					if len(jmeno) > len(nejdelsi_jmeno):
-						nejdelsi_jmeno = jmeno
-				print(f"{Style.BRIGHT}NORMAL:{Style.RESET_ALL}\nName" + " "*(len(nejdelsi_jmeno) - 4) + "\tRound\tTime")
-
-				for i, jmeno in enumerate(leaderboards_normal.keys()):
-					print(f"{jmeno}" + " "*(len(nejdelsi_jmeno) - len(jmeno)) + f"\t{list(leaderboards_normal.values())[i][1]}\t{list(leaderboards_normal.values())[i][0]}")
-				nejdelsi_jmeno = ""
-				for jmeno in leaderboards_normal.keys():
-					if len(jmeno) > len(nejdelsi_jmeno):
-						nejdelsi_jmeno = jmeno
-				print(f"{Style.BRIGHT}HARD:{Style.RESET_ALL}\nName" + " "*(len(nejdelsi_jmeno) - 4) + "\tRound\tTime")
-
-				for i, jmeno in enumerate(leaderboards_hard.keys()):
-					print(f"{jmeno}" + " "*(len(nejdelsi_jmeno) - len(jmeno)) + f"\t{list(leaderboards_hard.values())[i][1]}\t{list(leaderboards_hard.values())[i][0]}")
 			except FileNotFoundError:
-				print("NEE!")
+				pass
+			leaderboards_easy = dict(sorted(leaderboards_easy.items(), key=lambda item: item[1][0]))
+			leaderboards_normal = dict(sorted(leaderboards_normal.items(), key=lambda item: item[1][0]))
+			leaderboards_hard = dict(sorted(leaderboards_hard.items(), key=lambda item: item[1][0]))
+			leaderboards_easy = dict(sorted(leaderboards_easy.items(), key=lambda item: item[1][1]))
+			leaderboards_normal = dict(sorted(leaderboards_normal.items(), key=lambda item: item[1][1]))
+			leaderboards_hard = dict(sorted(leaderboards_hard.items(), key=lambda item: item[1][1]))
+			nejdelsi_jmeno = ""
+			for jmeno in leaderboards_easy.keys():
+				if len(jmeno) > len(nejdelsi_jmeno):
+					nejdelsi_jmeno = jmeno
+			print(f"{Style.BRIGHT}EASY:{Style.RESET_ALL}\nName" + " "*(len(nejdelsi_jmeno) - 4) + "\tRound\tTime")
+
+			for i, jmeno in enumerate(leaderboards_easy.keys()):
+				print(f"{jmeno}" + " "*(len(nejdelsi_jmeno) - len(jmeno)) + f"\t{list(leaderboards_easy.values())[i][1]}\t{list(leaderboards_easy.values())[i][0]}")
+			nejdelsi_jmeno = ""
+			for jmeno in leaderboards_normal.keys():
+				if len(jmeno) > len(nejdelsi_jmeno):
+					nejdelsi_jmeno = jmeno
+			print(f"{Style.BRIGHT}NORMAL:{Style.RESET_ALL}\nName" + " "*(len(nejdelsi_jmeno) - 4) + "\tRound\tTime")
+
+			for i, jmeno in enumerate(leaderboards_normal.keys()):
+				print(f"{jmeno}" + " "*(len(nejdelsi_jmeno) - len(jmeno)) + f"\t{list(leaderboards_normal.values())[i][1]}\t{list(leaderboards_normal.values())[i][0]}")
+			nejdelsi_jmeno = ""
+			for jmeno in leaderboards_normal.keys():
+				if len(jmeno) > len(nejdelsi_jmeno):
+					nejdelsi_jmeno = jmeno
+			print(f"{Style.BRIGHT}HARD:{Style.RESET_ALL}\nName" + " "*(len(nejdelsi_jmeno) - 4) + "\tRound\tTime")
+
+			for i, jmeno in enumerate(leaderboards_hard.keys()):
+				print(f"{jmeno}" + " "*(len(nejdelsi_jmeno) - len(jmeno)) + f"\t{list(leaderboards_hard.values())[i][1]}\t{list(leaderboards_hard.values())[i][0]}")
 		elif game == "M":
 			kvws_MP([])
 		elif game == "LI":
